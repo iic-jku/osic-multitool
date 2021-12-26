@@ -14,7 +14,7 @@
 # ------------------------
 export MY_PDK=/usr/local/share/pdk
 export MY_STDCELL=sky130_fd_sc_hd
-export SRC_DIR=$HOME/src2
+export SRC_DIR=$HOME/src
 export OPENLANE_DIR=$HOME/OpenLane
 
 # ---------------
