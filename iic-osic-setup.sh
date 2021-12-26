@@ -159,18 +159,35 @@ cd "$SRC_DIR/spyci"
 sudo python3 setup.py install
 
 
-# Prepare .spiceinit
+# Fix paths in xschemrc to point to correct PDK directory
+# -------------------------------------------------------
+sed 's/word1/word2/g' input.file
+
+sed -i 's/^set SKYWATER_MODELS/# set SKYWATER_MODELS/g' "$PDK_ROOT/sky130A/libs.tech/xschem/xschemrc"
+echo 'set SKYWATER_MODELS $env(PDK_ROOT)/sky130A/libs.tech/ngspice' >> "$PDK_ROOT/sky130A/libs.tech/xschem/xschemrc"
+sed -i 's/^set SKYWATER_STDCELLS/# set SKYWATER_STD_CELLS/g' "$PDK_ROOT/sky130A/libs.tech/xschem/xschemrc"
+echo 'set SKYWATER_STDCELLS $env(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/spice' >> "$PDK_ROOT/sky130A/libs.tech/xschem/xschemrc"
+
+
+# Create .spiceinit
 # ------------------
 echo "set num_threads=2" > "$HOME/.spiceinit"
 echo "set ngbehavior=hsa" >> "$HOME/.spiceinit"
 echo "set ng_nomodcheck" >> "$HOME/.spiceinit"
 
 
-# Prepare iic-init.sh
+# Create iic-init.sh
 # -------------------
 echo '#!/bin/sh' > "$HOME/iic-init.sh"
+echo '#' >> "$HOME/iic-init.sh"
+echo '# (c) 2021 Harald Pretl' >> "$HOME/iic-init.sh"
+echo '# Institute for Integrated Circuits' >> "$HOME/iic-init.sh"
+echo '# Johannes Kepler University Linz' >> "$HOME/iic-init.sh"
+echo '#' >> "$HOME/iic-init.sh"
 echo "export PDK_ROOT=$MY_PDK" >> "$HOME/iic-init.sh"
 echo "export STD_CELL_LIBRARY=$MY_STDCELL" >> "$HOME/iic-init.sh"
+echo 'cp -f $PDK_ROOT/sky130A/libs.tech/xschem/xschemrc $HOME' >> "$HOME/iic-init.sh"
+echo 'cp -f $PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc $HOME/.magicrc' >> "$HOME/iic-init.sh"
 chmod 750 "$HOME/iic-init.sh"
 
 
@@ -178,5 +195,5 @@ chmod 750 "$HOME/iic-init.sh"
 # --------
 echo ""
 echo "All done. Please test the OpenLane install by running"
-echo "> make test"
+echo ">> make test"
 
