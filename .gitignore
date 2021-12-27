@@ -1,0 +1,8 @@
+*.sp
+*.ext
+*.log
+*.out
+*.raw
+*.spice
+*.vcd
+ext*.tcl
