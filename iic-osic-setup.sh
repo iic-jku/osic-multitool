@@ -82,16 +82,13 @@ echo "Creating/updating PDK"
 make pdk
 
 
-# Get and apply SPICE modellib reducer
-# ------------------------------------
-if [ ! -d "$SRC_DIR/spice_model_red" ]; then
-	git clone https://github.com/hpretl/spice_model_red.git "$SRC_DIR/spice_model_red"
-fi
-
+# Apply SPICE modellib reducer
+# ----------------------------
+BASEDIR=$(dirname $(realpath "$0"))
 cd "$PDK_ROOT/sky130A/libs.tech/ngspice"
-$SRC_DIR/spice_model_red/spice_model_red.py sky130.lib.spice tt
-$SRC_DIR/spice_model_red/spice_model_red.py sky130.lib.spice ss
-$SRC_DIR/spice_model_red/spice_model_red.py sky130.lib.spice ff
+$BASEDIR/iic-spice-model-red.py sky130.lib.spice tt
+$BASEDIR/iic-spice-model-red.py sky130.lib.spice ss
+$BASEDIR/iic-spice-model-red.py sky130.lib.spice ff
 
 
 # Install/update xschem
