@@ -30,8 +30,8 @@ export CELL_LAY="$1.mag"
 export EXT_SCRIPT="ext_$1.tcl"
 export NETLIST_SCH="$1.sch.sp"
 export NETLIST_LAY="$1.ext.sp"
-export LVS_REPORT="$1.comp.out"
-export LVS_LOG="$1.comp.log"
+export LVS_REPORT="$1.lvs.out"
+export LVS_LOG="$1.lvs.log"
 export TOPCELL="$1"
 
 # Check if files exist
@@ -56,35 +56,34 @@ fi
 
 # Initial checks passed, start working
 # ------------------------------------
-echo "Running LVS of <$CELL_SCH> vs. <$CELL_LAY>."
+echo "Running LVS of <$CELL_SCH> vs <$CELL_LAY>."
 
 # Extract SPICE netlist from schematic
 # ------------------------------------
-xschem -n -s -q --no_x "$CELL_SCH" -N "$NETLIST_SCH"
+xschem -n -s -q --no_x --tcl 'set top_subckt 1' "$CELL_SCH" -N "$NETLIST_SCH"
 
 # Generate extract script for magic
 # ---------------------------------
 echo "load $CELL_LAY" 			> $EXT_SCRIPT
 echo "extract all" 			>> $EXT_SCRIPT
 echo "ext2spice lvs" 			>> $EXT_SCRIPT
-echo "ext2spice subcircuits off" 	>> $EXT_SCRIPT
 echo "ext2spice -o $NETLIST_LAY" 	>> $EXT_SCRIPT
 echo "quit" 				>> $EXT_SCRIPT
 
 # Extract SPICE netlist from layout with magic
 # --------------------------------------------
-magic -dnull "$EXT_SCRIPT" 
+magic -dnull -noconsole "$EXT_SCRIPT" > /dev/null 
 
 # Now run the lvs using netgen
 # ----------------------------
-netgen -batch lvs "$NETLIST_SCH" "$NETLIST_LAY" "$PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl" \
+netgen -batch lvs "$NETLIST_SCH $TOPCELL" "$NETLIST_LAY $TOPCELL" $PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl \
 	"$LVS_REPORT" > "$LVS_LOG"
 
 # Finished
 # --------
 echo "Result of LVS:"
 echo "--------------"
-tail -5 "$LVS_REPORT"
+tail -3 "$LVS_REPORT"
 echo ""
 echo "For details please check <$LVS_REPORT>."
 
