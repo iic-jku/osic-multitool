@@ -136,16 +136,6 @@ fi
 make -j$(nproc) && sudo make install
 
 
-# Install/update magic cheatsheet
-# -------------------------------
-if [ ! -d "$SRC_DIR/magic-cheatsheet" ]; then
-        git clone https://github.com/hpretl/magic-cheatsheet.git "$SRC_DIR/magic-cheatsheet"
-else
-        cd "$SRC_DIR/magic-cheatsheet"
-        git pull
-fi
-
-
 # Install/update netgen
 # ---------------------
 if [ ! -d "$SRC_DIR/netgen" ]; then
