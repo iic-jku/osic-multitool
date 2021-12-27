@@ -166,23 +166,26 @@ echo 'set SKYWATER_STDCELLS $env(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/spic
 
 # Create .spiceinit
 # ------------------
-echo "set num_threads=2" > "$HOME/.spiceinit"
-echo "set ngbehavior=hsa" >> "$HOME/.spiceinit"
-echo "set ng_nomodcheck" >> "$HOME/.spiceinit"
+echo "set num_threads=2" 							> "$HOME/.spiceinit"
+echo "set ngbehavior=hsa" 							>> "$HOME/.spiceinit"
+echo "set ng_nomodcheck" 							>> "$HOME/.spiceinit"
 
 
 # Create iic-init.sh
 # -------------------
-echo '#!/bin/sh' > "$HOME/iic-init.sh"
-echo '#' >> "$HOME/iic-init.sh"
-echo '# (c) 2021 Harald Pretl' >> "$HOME/iic-init.sh"
-echo '# Institute for Integrated Circuits' >> "$HOME/iic-init.sh"
-echo '# Johannes Kepler University Linz' >> "$HOME/iic-init.sh"
-echo '#' >> "$HOME/iic-init.sh"
-echo "export PDK_ROOT=$MY_PDK" >> "$HOME/iic-init.sh"
-echo "export STD_CELL_LIBRARY=$MY_STDCELL" >> "$HOME/iic-init.sh"
-echo 'cp -f $PDK_ROOT/sky130A/libs.tech/xschem/xschemrc $HOME' >> "$HOME/iic-init.sh"
-echo 'cp -f $PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc $HOME/.magicrc' >> "$HOME/iic-init.sh"
+if [ ! -d "$HOME/.xschem" ]; then
+	mkdir "$HOME/.xschem"
+fi
+echo '#!/bin/sh' 								> "$HOME/iic-init.sh"
+echo '#' 									>> "$HOME/iic-init.sh"
+echo '# (c) 2021 Harald Pretl' 							>> "$HOME/iic-init.sh"
+echo '# Institute for Integrated Circuits' 					>> "$HOME/iic-init.sh"
+echo '# Johannes Kepler University Linz' 					>> "$HOME/iic-init.sh"
+echo '#' 									>> "$HOME/iic-init.sh"
+echo "export PDK_ROOT=$MY_PDK" 							>> "$HOME/iic-init.sh"
+echo "export STD_CELL_LIBRARY=$MY_STDCELL" 					>> "$HOME/iic-init.sh"
+echo 'cp -f $PDK_ROOT/sky130A/libs.tech/xschem/xschemrc $HOME/.xschem' 		>> "$HOME/iic-init.sh"
+echo 'cp -f $PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc $HOME/.magicrc' 	>> "$HOME/iic-init.sh"
 chmod 750 "$HOME/iic-init.sh"
 
 
