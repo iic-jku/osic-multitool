@@ -2,7 +2,7 @@
 
 ## (c) 2021 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits
 
-This repo contains various tools and examples for Open-Source IC Design.
+This repo contains various tools and examples for Open-Source IC Design. At this point only the open-source PDK `SKY130` from SkyWater Technologies is supported.
 
 ### Initialization of SKY130 PDK and tools
 
