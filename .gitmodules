@@ -1,0 +1,3 @@
+[submodule "magic-cheatsheet"]
+	path = magic-cheatsheet
+	url = git@github.com:hpretl/magic-cheatsheet.git
