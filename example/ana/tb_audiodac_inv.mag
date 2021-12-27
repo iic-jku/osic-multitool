@@ -1,0 +1,11 @@
+magic
+tech sky130A
+magscale 1 2
+timestamp 1640604873
+<< checkpaint >>
+rect -1260 -660 2556 4959
+use audiodac_inv  x1
+timestamp 1640604873
+transform 1 0 126 0 1 2200
+box -126 -1600 1170 1499
+<< end >>
