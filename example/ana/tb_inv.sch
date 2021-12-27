@@ -8,7 +8,7 @@ T {(c) 2021 Harald Pretl, JKU, IIC
 
 Inverter Testbench
 
-Here a simple inverter (cell "audiodac_inv") is instantiated as a symbol, and this
+Here a simple inverter (cell "inv") is instantiated as a symbol, and this
 can be simulated.} 140 -690 0 0 0.4 0.4 {}
 N 240 -100 240 -40 { lab=GND}
 N 240 -40 360 -40 { lab=GND}
@@ -57,8 +57,8 @@ save all
 op
 tran 0.1n 1u
 
-write tb_audiodac_inv.raw
-* exit
+write tb_inv.raw
+exit
 
 .endc
 "}
@@ -66,7 +66,7 @@ C {devices/lab_wire.sym} 400 -200 0 0 {name=l3 lab=in}
 C {devices/vsource.sym} 360 -130 0 0 {name=V5
 value1="dc 5 "
 value="dc 5 pulse 5 0 0 1n 1n 0.05u 0.1u"}
-C {audiodac_inv.sym} 770 -200 0 0 {name=x1}
+C {inv.sym} 770 -200 0 0 {name=x1}
 C {devices/gnd.sym} 240 -20 0 0 {name=l1 lab=GND}
 C {devices/capa.sym} 1020 -130 0 0 {name=C1
 m=1

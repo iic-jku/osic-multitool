@@ -16,6 +16,7 @@ export MY_PDK=/usr/local/share/pdk
 export MY_STDCELL=sky130_fd_sc_hd
 export SRC_DIR=$HOME/src
 export OPENLANE_DIR=$HOME/OpenLane
+export SCRIPT_DIR=$(dirname $(realpath "$0"))
 
 # ---------------
 # Now go to work!
@@ -84,11 +85,10 @@ make pdk
 
 # Apply SPICE modellib reducer
 # ----------------------------
-BASEDIR=$(dirname $(realpath "$0"))
 cd "$PDK_ROOT/sky130A/libs.tech/ngspice"
-$BASEDIR/iic-spice-model-red.py sky130.lib.spice tt
-$BASEDIR/iic-spice-model-red.py sky130.lib.spice ss
-$BASEDIR/iic-spice-model-red.py sky130.lib.spice ff
+$SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice tt
+$SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice ss
+$SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice ff
 
 
 # Install/update xschem
