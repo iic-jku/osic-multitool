@@ -1,0 +1,154 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{parskip}
+\author{Harald Pretl\\Institute for Integrated Circuits, Johannes Kepler University Linz}
+\title{Magic VLSI Cheatsheet}
+\date{\copyright~2021}
+\newcommand{\key}[1]{\texttt{\textbf{#1}}}
+\newcommand{\mac}[1]{\texttt{#1}}
+\newcommand{\argu}[1]{\textit{#1}}
+\newcommand{\mouse}[1]{\texttt{#1}}
+\begin{document}
+	\maketitle
+	
+	This cheat sheet compiles useful commands (to be entered in the Tcl window) and bind keys (in the layout window) as well as a summary of the mouse operations for the different tool modes. This compilation relates to Magic 8.3 (see \url{https://github.com/RTimothyEdwards/magic}).
+	
+	\newpage
+
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{Useful commands:}\\
+		\midrule
+		\mac{addpath} [\argu{path}] & add search \argu{path} of cells\\
+		\mac{array} \argu{xsize} \argu{ysize} & array the selection \argu{xsize}-times in X, \argu{ysize}-times in Y, spacing by box\\
+		\mac{contact} \argu{type} & create contact inside box of intersecting layers\\
+		\mac{corner} \argu{dir1} \argu{dir2} & draws a corner inside box, first in \argu{dir1}, then in \argu{dir2} (cf.~\mac{fill})\\
+		\mac{drc} \mac{find} & locate DRC error\\
+		\mac{drc} \mac{why} & explain DRC errors in box\\
+		\mac{dump} \argu{cell} & copy given \argu{cell} into current layout cell\\
+		\mac{erase} \argu{layers} & erase comma-separated list of \argu{layers} in box\\
+		\mac{erase} \mac{*} & all layers but not labels\\
+		\mac{erase} \mac{\$} & erase everything (like \key{CTRL-D})\\
+		%\mac{exit} & exits magic\\ don't use exit, as it might cause trouble
+		\mac{fill} \argu{dir} & extend layers from one side of box to the other in the given \argu{dir}ection (cf.~\mac{corner})\\
+		\mac{findlabel} \argu{label} & center the box on the \argu{label}\\
+		\mac{flatten} \argu{cell} & flatten the current edit cell incl. hierarchy into a new \argu{cell}\\
+		\mac{flush} & revert edit cell to last state on disk\\
+		\mac{get} \argu{cell} & instantiate \argu{cell} into current edit cell\\
+		\mac{help} [\argu{pattern}] & shows help for various commands\\
+		\mac{identify} \argu{cell-id} & name the selected cell as \argu{cell-id}\\
+		\mac{iroute} & interactive point-to-point router, from cursor to box\\
+		\mac{label} \argu{string} [\argu{position} [\argu{layer}]] & create a point, line or box label\\
+		\mac{load} \argu{cell} & open the \argu{cell} in the layout window\\
+		\mac{macro} [\argu{window\_type}] [\argu{key} [\argu{value}]] & new macro definition \\
+		\mac{measure} [\mac{hor}|\mac{ver}|\mac{auto}] & create a ruler in the box\\
+		\mac{paint} \argu{layers} & paint the comma-separated list of \argu{layers} in box\\
+		\mac{plow} \argu{dir} & move layout structures incl. connectivity in \argu{dir}ection, see manual\\
+		\mac{quit} \mac{[-nocheck]} & exit magic (using \mac{-nocheck} discards unsaved changes)\\
+		\mac{see} \mac{[no]} \argu{layers} & show or hide comma-separated list of \argu{layers}\\
+		\mac{see} \mac{[no]} \mac{*} & show or hide all layers\\
+		\mac{straighten} \argu{dir} & try to repair jogs by pulling in \argu{dir}ection\\
+		\mac{tool} & changes the currently used \mouse{tool} to (box, wiring, netlist, pick)\\
+		\mac{redraw} & redraws the window\\
+		\mac{unmeasure} & remove all rulers in box\\
+		\mac{what} & print information about the current selection\\
+		\mac{xload} \argu{cell} & open the \argu{cell} in the layout window unexpanded\\
+		\mac{xview} & full view, with unexpanded cells\\
+		\bottomrule
+	\end{tabular}
+	
+	\newpage
+
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{Bind keys:}\\
+		\midrule
+		\key{a} & select everything in box\\
+		\key{A} & select additional objects in box\\
+		\key{CTRL-A} & deselect objects in box\\
+		\key{b} & print information about the \mac{box}\\
+		\key{B} & center window on the box\\
+		\key{c} & \mac{copy}\\
+		\key{d} & \mac{delete} selection\\
+		\key{CTRL-D} & delete all layers and labels in box\\
+		\key{e} & makes the selected cell the new \mac{edit} cell\\
+		\key{f} & flip the selection sideways\\
+		\key{F} & flip the selection upside-down\\
+		\key{g} & toggle \mac{grid}\\
+		\key{i} & select instance under cursor\\
+		\key{I} & select additional instance under cursor\\
+		\key{CTRL-I} & deselect instance under cursor\\
+		\key{m} & \mac{move} selection to cursor position\\
+		\key{o} & \mac{openwindow} (with current selection)\\
+		\key{r} & \mac{rotate} 90\\
+		\key{R} & \mac{rotate} -90\\
+		\key{s} & \mac{select} objects under cursor\\
+		\key{S} & \mac{select} additional objects under cursor\\
+		\key{CTRL-S} & deselect objects under cursor\\
+		\key{u} & \mac{undo} the last operation\\
+		\key{U} & \mac{redo} the last undo\\
+		\key{v} & \mac{view}, full view of layout\\
+		\key{w} & \mac{writeall} changed cells to disk\\
+		\key{x} & \mac{expand} cells (make visible) in box\\
+		\key{X} & \mac{unexpand} cells (hide) inside the box\\
+		\key{CTRL-X} & toggle the visibility of cells in box\\
+		\key{z} & zoom out\\
+		\key{Z} & zoom in\\
+		\key{CTRL-Z} & zoom in on box\\
+		\key{>} & edit the selected cell in layout window (cf.~\key{<})\\
+		\key{<} & return from editing a cell (cf.~\key{>})\\
+		\key{,} & clear selection\\
+		\key{:} & directly jump to command window (like VI)\\
+		\key{SPACE} & change the tool\\
+		\key{SHIFT + SPACE} & change to the box tool\\
+		\key{KEYPAD-2} & move selection south, equivalent to `\mac{move} s 1`\\
+		\key{SHIFT + KEYPAD-2} & stretch selection south, equivalent to `\mac{stretch} s 1`\\
+		\key{KEYPAD-4} & move selection west, equivalent to `\mac{move} w 1`\\
+		\key{SHIFT + KEYPAD-4} & stretch selection west, equivalent to `\mac{stretch} w 1`\\
+		\key{KEYPAD-6} & move selection east, equivalent to `\mac{move} e 1` \\
+		\key{SHIFT + KEYPAD-6} & stretch selection east, equivalent to `\mac{stretch} e 1`\\
+		\key{KEYPAD-8} & move selection north, equivalent to `\mac{move} n 1` \\
+		\key{SHIFT + KEYPAD-8} & stretch selection north, equivalent to `\mac{stretch} n 1`\\
+		\bottomrule
+	\end{tabular}
+
+	\newpage
+	
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{Mouse operations:}\\
+		\midrule
+		\multicolumn{2}{l}{Box tool:}\\
+		\mouse{LEFT} & set lower-left corner of box\\
+		\mouse{RIGHT} & set upper-right corner of box\\
+		\mouse{MIDDLE} & \mac{paint} layer pointed with cursor in box\\
+		\mouse{SHIFT + MIDDLE} & \mac{erase} layer pointed with cursor in box\\
+		\midrule
+		\multicolumn{2}{l}{Layer selection tool:}\\
+		\mouse{LEFT} & show selected layer, cf.~\mac{see}\\
+		\mouse{RIGHT} & hide selected layer, cf.~\mac{see} no\\
+		\midrule
+		\multicolumn{2}{l}{Wiring tool:}\\
+		\mouse{LEFT} & pick wire material and size from cursor\\
+		\mouse{MIDDLE} & place wire at cursor\\
+		\mouse{RIGHT} & cancel wire\\
+		\mouse{SHIFT + LEFT} & change to higher layer (e.g. m1 to m2)\\
+		\mouse{SHIFT + RIGHT} & change to lower layer (e.g. m2 to m1)\\
+		\mouse{SHIFT + MIDDLE} & place a contact at cursor and continue on higher layer\\
+		\midrule
+		\multicolumn{2}{l}{Pick tool:}\\
+		\mouse{LEFT} & remove current selection and follow cursor\\
+		\mouse{MIDDLE} & place a copy and continue\\
+		\mouse{RIGHT} & cancel\\
+		\mouse{SHIFT + MIDDLE} & make a copy of selection and follow cursor\\
+		\bottomrule
+	\end{tabular}
+	
+\end{document}

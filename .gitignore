@@ -6,3 +6,7 @@
 *.spice
 *.vcd
 ext*.tcl
+*.aux
+*.fls
+*.fdb_latexmk
+*.synctex.gz

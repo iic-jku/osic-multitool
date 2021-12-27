@@ -20,6 +20,10 @@ A fully-automatic LVS script is prepared. Run the LVS by using `iic-lvs.sh <cell
 
 The various temporary files and outputs can be removed from a directory by running `iic-clean.sh`.
 
+### Cheatsheet for magic
+
+In the folder `magic-cheatsheet` there is a summary of important macros, keybindings, and mouse button operations for `magic` VLSI, relating to version 8.3.
+
 ### Example analog and digital designs
 
 In the folder `example` an analog design example (an inverter in subfolder `example/ana`) and a simple digital design example (a counter in subfolder `example/dig`) are prepared for testing the environment.
