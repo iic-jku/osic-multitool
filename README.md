@@ -1,34 +1,34 @@
 # IIC-OSIC Tools
 
-## (c) 2021 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits
+**(c) 2021 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits**
 
-This repo contains various tools and examples for Open-Source IC Design. At this point only the open-source PDK `SKY130` from SkyWater Technologies is supported.
+This repo contains various tools and examples for Open-Source IC (OSIC) Design. At this point only the open-source PDK `SKY130` from SkyWater Technologies is supported.
 
-### Initialization of SKY130 PDK and tools
+## Initialization of SKY130 PDK and tools
 
-Use `iic-osic-setup.sh` to setup or update a complete analog/digital IC design environment in Ubuntu/Xubuntu. Please see the script for usage and the installed tools.
+Use `iic-osic-setup.sh` to setup or update a complete analog/digital IC design environment in Ubuntu/Xubuntu. Please see the (documented) script for usage and the installed tools.
 
-The setup script creates an initialization script in the user's home directory. Use it to setup the environment by running
+The setup script creates also an initialization script in the user's home directory. Use it to setup the environment by running
 
 `source ~/iic-init.sh`
 
-### LVS script
+## LVS script
 
-A fully-automatic LVS script is prepared. Run the LVS by using `iic-lvs.sh <cellname>`, where `<cellname>` is the name of the schematic and layout cell. For further documentation and usage of this script please look into the file.
+A fully-automatic LVS script is prepared. Run the LVS by using `iic-lvs.sh <cellname>`, where `<cellname>` is the name of the schematic/verilog and layout cell. For further documentation and usage of this script please look into the file.
 
-### Cleanup of temporary files
+## Cleanup of temporary files
 
-The various temporary files and outputs can be removed from a directory by running `iic-clean.sh`.
+The various temporary and results files and outputs can be removed from a directory by running `iic-clean.sh`.
 
-### Cheatsheet for magic
+## Cheatsheet for magic
 
 In the folder `magic-cheatsheet` there is a summary of important macros, keybindings, and mouse button operations for `magic` VLSI, relating to version 8.3.
 
-### Example analog and digital designs
+## Example analog and digital designs
 
-In the folder `example` an analog design example (an inverter in subfolder `example/ana`) and a simple digital design example (a counter in subfolder `example/dig`) are prepared for testing the environment.
+In the folder `example` an analog design example (an inverter in subfolder `example/ana`) and a simple digital design example (a counter in subfolder `example/dig`) are prepared for testing the environment. In the folder `example/dig/rtl` the result of the digital flow `OpenLane` is presented, as a powered Verilog file and a layout view.
 
-### SPICE model file reducer
+## SPICE model file reducer
 
 This Python script traverses through a SPICE model file, removes empty lines and comments, and extracts the
 specified model corner (default is `tt`). It further produces a flat single model file for use with e.g. `ngspice`.
