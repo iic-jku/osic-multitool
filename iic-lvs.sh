@@ -78,11 +78,16 @@ fi
 
 # Generate extract script for magic
 # ---------------------------------
-echo "load $CELL_LAY" 			> $EXT_SCRIPT
-echo "extract all" 			>> $EXT_SCRIPT
-echo "ext2spice lvs" 			>> $EXT_SCRIPT
-echo "ext2spice -o $NETLIST_LAY" 	>> $EXT_SCRIPT
-echo "quit" 				>> $EXT_SCRIPT
+echo "load $CELL_LAY" 					> $EXT_SCRIPT
+echo "extract all" 					>> $EXT_SCRIPT
+echo "ext2spice lvs" 					>> $EXT_SCRIPT
+if [ $VERILOG_MODE -eq 1 ]; then
+	# this is needed for the LVS in netgen, because the standard cells
+	# are not instantiated in the (powered) .v file
+	echo "ext2spice subcircuit descend off"		>> $EXT_SCRIPT
+fi
+echo "ext2spice -o $NETLIST_LAY" 			>> $EXT_SCRIPT
+echo "quit" 						>> $EXT_SCRIPT
 
 # Extract SPICE netlist from layout with magic
 # --------------------------------------------
@@ -95,6 +100,8 @@ if [ $VERILOG_MODE -eq 0 ]; then
 		$PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl \
 		"$LVS_REPORT" > "$LVS_LOG"
 else
+	# this is not needed if subcircuit descend off is applied during extract
+	# UPDATE: still needed, the subcircuit descend off seems to not work
 	export MAGIC_EXT_USE_GDS=1
 	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$CELL_V $TOPCELL" \
                 $PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl \
