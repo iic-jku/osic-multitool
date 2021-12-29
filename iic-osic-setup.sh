@@ -91,6 +91,12 @@ $SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice ss
 $SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice ff
 
 
+# Add IIC custom bindkeys to magicrc file
+# ---------------------------------------
+echo "# Custom bindkeys for IIC" 		>> "$PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc"
+echo "source $SCRIPT_DIR/iic-magic-bindkeys" 	>> "$PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc"
+
+
 # Install/update xschem
 # ---------------------
 if [ ! -d "$SRC_DIR/xschem" ]; then
