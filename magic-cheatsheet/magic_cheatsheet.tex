@@ -36,6 +36,7 @@
 		\mac{erase} \argu{layers} & erase comma-separated list of \argu{layers} in box\\
 		\mac{erase} \mac{*} & all layers but not labels\\
 		\mac{erase} \mac{\$} & erase everything (like \key{CTRL-D})\\
+		\mac{erase labels} & erase selected label(s) in box\\
 		%\mac{exit} & exits magic\\ don't use exit, as it might cause trouble
 		\mac{fill} \argu{dir} & extend layers from one side of box to the other in the given \argu{dir}ection (cf.~\mac{corner})\\
 		\mac{findlabel} \argu{label} & center the box on the \argu{label}\\
@@ -51,9 +52,12 @@
 		\mac{measure} [\mac{hor}|\mac{ver}|\mac{auto}] & create a ruler in the box\\
 		\mac{paint} \argu{layers} & paint the comma-separated list of \argu{layers} in box\\
 		\mac{plow} \argu{dir} & move layout structures incl. connectivity in \argu{dir}ection, see manual\\
+		\mac{port make} & create a port from selected label\\
+		\mac{port index} \argu{number} & assign a port index (must match the number from schematic)\\ 
 		\mac{quit} \mac{[-nocheck]} & exit magic (using \mac{-nocheck} discards unsaved changes)\\
 		\mac{see} \mac{[no]} \argu{layers} & show or hide comma-separated list of \argu{layers}\\
 		\mac{see} \mac{[no]} \mac{*} & show or hide all layers\\
+		\mac{select save} \argu{file} & Save selection as new \argu{file}.mag\\
 		\mac{straighten} \argu{dir} & try to repair jogs by pulling in \argu{dir}ection\\
 		\mac{tool} & changes the currently used \mouse{tool} to (box, wiring, netlist, pick)\\
 		\mac{redraw} & redraws the window\\
@@ -77,11 +81,12 @@
 		\key{B} & center window on the box\\
 		\key{c} & \mac{copy}\\
 		\key{d} & \mac{delete} selection\\
-		\key{CTRL-D} & delete all layers and labels in box\\
+		\key{CTRL-D} & delete all layers and labels in box selected by cursor\\
 		\key{e} & makes the selected cell the new \mac{edit} cell\\
 		\key{f} & flip the selection sideways\\
 		\key{F} & flip the selection upside-down\\
 		\key{g} & toggle \mac{grid}\\
+		\key{G} & toggle \mac{grid 2}\\
 		\key{i} & select instance under cursor\\
 		\key{I} & select additional instance under cursor\\
 		\key{CTRL-I} & deselect instance under cursor\\
@@ -99,6 +104,7 @@
 		\key{x} & \mac{expand} cells (make visible) in box\\
 		\key{X} & \mac{unexpand} cells (hide) inside the box\\
 		\key{CTRL-X} & toggle the visibility of cells in box\\
+		\key{y} & \mac{drc why}\\
 		\key{z} & zoom out\\
 		\key{Z} & zoom in\\
 		\key{CTRL-Z} & zoom in on box\\
