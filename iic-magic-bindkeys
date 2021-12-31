@@ -1,11 +1,25 @@
 # Useful bindkeys for Magic VLSI
 # (c) 2021 Harald Pretl
-# Institute for Integrated Circuirs, Johannes Kepler University Linz
+# Institute for Integrated Circuits, Johannes Kepler University Linz
 
 macro 0 "see no * ; see locali ; see mcon"
-macro 1 "see no * ; see mcon   ; see metal1 ; see via1"
-macro 2 "see no * ; see via1   ; see metal2 ; see via2"
-macro 3 "see no * ; see via2   ; see metal3 ; see via3"
-macro 4 "see no * ; see via3   ; see metal4 ; see via4"
-macro 5 "see no * ; see via4   ; see metal5"
+macro ! "see no * ; see mcon   ; see metal1 ; see via1"
+macro @ "see no * ; see via1   ; see metal2 ; see via2"
+macro # "see no * ; see via2   ; see metal3 ; see via3"
+macro $ "see no * ; see via3   ; see metal4 ; see via4"
+macro % "see no * ; see via4   ; see metal5"
 macro 9 "see *"
+
+# Here a few from sky130A/libs.tech/magic/sky130A-BindKeys
+# mainly use the ones not altering original magic useage, as we
+# want to stick to magic as much as we can; just adding the real
+# useful ones
+
+macro f "view"
+macro ^f "sideways"
+macro p "tool wire ; magic::trackwire %W pick"
+macro k "magic::measure"
+macro K "magic::unmeasure"
+macro q "magic::gencell {} ; raise .params"
+macro y "drc check ; drc why"
+macro ? "select area ; what"
