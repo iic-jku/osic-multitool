@@ -38,11 +38,11 @@ echo 'select top cell'					>> $EXT_SCRIPT
 echo 'drc euclidean on'					>> $EXT_SCRIPT
 echo 'drc style drc(full)'				>> $EXT_SCRIPT
 echo 'drc check'					>> $EXT_SCRIPT
-echo 'set drc_cnt [drc list count]'			>> $EXT_SCRIPT
-echo 'puts stdout "No of DRC errors: $drc_cnt"'		>> $EXT_SCRIPT
 echo 'set drc_res [drc listall why]'			>> $EXT_SCRIPT
+echo 'puts stdout "--------------"'			>> $EXT_SCRIPT
+echo 'drc count'					>> $EXT_SCRIPT
 echo 'puts stdout "Error details:"'			>> $EXT_SCRIPT
-echo 'puts stdout "-------------:"'			>> $EXT_SCRIPT
+echo 'puts stdout "--------------"'			>> $EXT_SCRIPT
 echo 'foreach {errtype coordlist} $drc_res {'		>> $EXT_SCRIPT
 echo '  puts stdout $errtype }'				>> $EXT_SCRIPT
 echo 'quit' 						>> $EXT_SCRIPT

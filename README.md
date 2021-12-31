@@ -16,6 +16,12 @@ The setup script creates also an initialization script in the user's home direct
 
 A fully-automatic LVS script is prepared. Run the LVS by using `iic-lvs.sh <cellname>`, where `<cellname>` is the name of the schematic/verilog and layout cell. For further documentation and usage of this script please look into the file.
 
+## DRC script
+
+A fully-automatic DRC script is prepared. Run the DRC by using `iic-drc.sh <cellname>`, where `<cellname>` is the name of the layout cell <cellname>.mag. 
+
+_Note that this DRC can show additional errors compared to the (fast) DRC during layout generation, as this DRC runs in CIF/GDS mode._
+
 ## Cleanup of temporary files
 
 The various temporary and results files and outputs can be removed from a directory by running `iic-clean.sh`.
