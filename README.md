@@ -22,6 +22,12 @@ A fully-automatic DRC script is prepared. Run the DRC by using `iic-drc.sh <cell
 
 _Note that this DRC can show additional errors compared to the (fast) DRC during layout generation, as this DRC runs in CIF/GDS mode._
 
+## PEX script
+
+A fully-automatic PEX script for parasitic extraction is prepared. Run the PEX by using `iic-pex.sh <cellname>`, where `<cellname>` is the name of the layout cell <cellname>.mag.
+
+The resulting SPICE netlist including parasitic wiring components is called <cellname>.pex.spice.
+
 ## Cleanup of temporary files
 
 The various temporary and results files and outputs can be removed from a directory by running `iic-clean.sh`.
@@ -61,7 +67,7 @@ Exemplary use on the SKY130A model file:
 iic-spice-model-red.py sky130.lib.spice tt
 ```
 
-**Todo:**
+## Todo:
 
-* Add better control of output during run, maybe add a `--verbose` switch.
-
+* SPICE model file reducer: Add better control of output during run, maybe add a `--verbose` switch.
+* PEX: Add extraction of parasitic resistors

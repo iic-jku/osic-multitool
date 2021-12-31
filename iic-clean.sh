@@ -17,3 +17,5 @@ rm -f *.raw
 rm -f *.spice
 rm -f *.vcd
 rm -f ext*.tcl
+rm -f drc*.tcl
+rm -f pex*.tcl
