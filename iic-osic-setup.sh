@@ -39,9 +39,10 @@ sudo apt -qq autoremove -y
 # Install all the packages available via apt
 # ------------------------------------------
 echo "Installing required (and useful) packages via APT"
-sudo apt -qq install -y htop mc vim docker.io git ngspice klayout iverilog gtkwave ghdl \
-	verilator yosys xdot vim-gtk3 python3 libgtk-3-dev build-essential xterm \
+sudo apt -qq install -y docker.io git ngspice klayout iverilog gtkwave ghdl \
+	verilator yosys xdot python3 libgtk-3-dev build-essential xterm \
 	octave octave-signal octave-communications octave-control \
+	htop mc vim vim-gtk3 kdiff3 \
 	graphicsmagick ghostscript mesa-common-dev libglu1-mesa-dev csh tcsh
 
 
