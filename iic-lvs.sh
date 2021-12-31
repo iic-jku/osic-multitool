@@ -79,6 +79,7 @@ fi
 # Generate extract script for magic
 # ---------------------------------
 echo "load $CELL_LAY" 					> $EXT_SCRIPT
+echo "select top cell"                                  >> $EXT_SCRIPT
 echo "extract all" 					>> $EXT_SCRIPT
 echo "ext2spice lvs" 					>> $EXT_SCRIPT
 if [ $VERILOG_MODE -eq 1 ]; then
