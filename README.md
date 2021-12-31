@@ -105,8 +105,9 @@ Exemplary use on the SKY130A model file:
 ./iic-spice-model-red.py sky130.lib.spice tt
 ```
 
-## Todo:
+## Todo and Known Bugs
 
 * SPICE model file reducer: Add better control of output during run, maybe add a `--verbose` switch.
-* PEX: Add extraction of parasitic resistors
-* Magic cheatsheet: Add IIC-specific keybindings
+* PEX: Add extraction of parasitic resistors.
+* Magic cheatsheet: Add IIC-specific keybindings, and fix the ones not properly working (see below).
+* Magic/cheatsheet: Some bindkeys seem to not work properly, like `f`, `y`, `.` -- check why and fix cheatsheet.
