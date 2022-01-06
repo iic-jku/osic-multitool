@@ -42,8 +42,15 @@ echo "Installing required (and useful) packages via APT"
 sudo apt -qq install -y docker.io git ngspice klayout iverilog gtkwave ghdl \
 	verilator yosys xdot python3 libgtk-3-dev build-essential xterm \
 	octave octave-signal octave-communications octave-control \
+<<<<<<< Updated upstream
 	htop mc vim vim-gtk3 kdiff3 \
 	graphicsmagick ghostscript mesa-common-dev libglu1-mesa-dev csh tcsh
+=======
+	graphicsmagick ghostscript mesa-common-dev libglu1-mesa-dev csh tcsh \
+	tcl-dev tk-dev m4 flex bison libxpm-dev libx11-6 libx11-dev libxrender1 libxrender-dev \
+	libxcb1 libx11-xcb-dev libcairo2 libcairo2-dev tcl8.6 tcl8.6-dev tk8.6 tk8.6-dev \
+	flex bison libxpm4 libxpm-dev gawk
+>>>>>>> Stashed changes
 
 
 # Add user to Docker group
