@@ -108,7 +108,7 @@ echo "source $SCRIPT_DIR/iic-magic-bindkeys" 	>> "$PDK_ROOT/sky130A/libs.tech/ma
 # Install/update xschem
 # ---------------------
 if [ ! -d "$SRC_DIR/xschem" ]; then
-	sudo apt build-dep xschem
+	sudo apt build-dep -y xschem
 	git clone https://github.com/StefanSchippers/xschem.git "$SRC_DIR/xschem"
 	cd "$SRC_DIR/xschem"
 	./configure
