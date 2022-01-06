@@ -49,7 +49,7 @@ sudo apt -qq install -y docker.io git ngspice klayout iverilog gtkwave ghdl \
 	tcl-dev tk-dev m4 flex bison libxpm-dev libx11-6 libx11-dev libxrender1 libxrender-dev \
 	libxcb1 libx11-xcb-dev libcairo2 libcairo2-dev tcl8.6 tcl8.6-dev tk8.6 tk8.6-dev \
 	flex bison libxpm4 libxpm-dev gawk \
-	aclocal automake autoconf
+	automake autoconf
 
 
 # Add user to Docker group
