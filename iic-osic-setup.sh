@@ -25,6 +25,7 @@ export SCRIPT_DIR=$(dirname $(realpath "$0"))
 # Update Ubuntu/Xubuntu installation
 # ----------------------------------
 # the following is needed for xschem
+echo ">>>> Update packages"
 sudo sed -i 's/# deb-src/deb-src/g' /etc/apt/sources.list
 sudo apt -qq update -y
 sudo apt -qq upgrade -y
@@ -32,7 +33,7 @@ sudo apt -qq upgrade -y
 
 # Optional removal of not needed packages to free up space, important for VirtualBox
 # ----------------------------------------------------------------------------------
-echo "Removing packages to free up space"
+echo ">>>> Removing packages to free up space"
 sudo apt -qq remove -y libreoffice-* pidgin* thunderbird* transmission* xfburn* \
 	gnome-mines gnome-sudoku sgt-puzzles parole gimp*
 sudo apt -qq autoremove -y
@@ -40,8 +41,9 @@ sudo apt -qq autoremove -y
 
 # Install all the packages available via apt
 # ------------------------------------------
-echo "Installing required (and useful) packages via APT"
-sudo apt -qq install -y docker.io git ngspice klayout iverilog gtkwave ghdl \
+echo ">>>> Installing required (and useful) packages via APT"
+# FIXME ngspice installed separately, as version in LTS is too old
+sudo apt -qq install -y docker.io git klayout iverilog gtkwave ghdl \
 	verilator yosys xdot python3 python3-pip libgtk-3-dev build-essential xterm \
 	octave octave-signal octave-communications octave-control \
 	htop mc vim vim-gtk3 kdiff3 \
@@ -60,7 +62,7 @@ sudo usermod -aG docker $USER
 # Create PDK directory if it does not yet exist
 # ---------------------------------------------
 if [ ! -d "$MY_PDK" ]; then
-	echo "Creating PDK directory $MY_PDK"
+	echo ">>>> Creating PDK directory $MY_PDK"
 	
 	sudo mkdir "$MY_PDK"
 	sudo chown $USER:staff "$MY_PDK"
@@ -72,11 +74,11 @@ fi
 export PDK_ROOT=$MY_PDK
 export STD_CELL_LIBRARY=$MY_STDCELL
 if [ -d "$OPENLANE_DIR" ]; then
-	echo "Updating OpenLane"
+	echo ">>>> Updating OpenLane"
 	cd "$OPENLANE_DIR"
 	git pull
 else
-	echo "Pulling OpenLane from GitHub"
+	echo ">>>> Pulling OpenLane from GitHub"
 	git clone https://github.com/The-OpenROAD-Project/OpenLane.git "$OPENLANE_DIR"
 fi
 
@@ -84,15 +86,16 @@ fi
 # Update OpenLane
 # ---------------
 cd "$OPENLANE_DIR"
-echo "Pulling latest OpenLane version"
+echo ">>>> Pulling latest OpenLane version"
 make pull-openlane
-echo "Creating/updating PDK"
+echo ">>>> Creating/updating PDK"
 rm -rf $PDK_ROOT/skywater-pdk # FIXME WA otherwise `git clone` fails
 make pdk
 
 
 # Apply SPICE modellib reducer
 # ----------------------------
+echo ">>>> Applying SPICE model library reducer"
 cd "$PDK_ROOT/sky130A/libs.tech/ngspice"
 $SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice tt
 $SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice ss
@@ -101,6 +104,7 @@ $SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice ff
 
 # Add IIC custom bindkeys to magicrc file
 # ---------------------------------------
+echo ">>>> Add custom bindkeys to magicrc"
 echo "# Custom bindkeys for IIC" 		>> "$PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc"
 echo "source $SCRIPT_DIR/iic-magic-bindkeys" 	>> "$PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc"
 
@@ -108,11 +112,13 @@ echo "source $SCRIPT_DIR/iic-magic-bindkeys" 	>> "$PDK_ROOT/sky130A/libs.tech/ma
 # Install/update xschem
 # ---------------------
 if [ ! -d "$SRC_DIR/xschem" ]; then
+	echo ">>>> Installing xschem"
 	sudo apt build-dep -y xschem
 	git clone https://github.com/StefanSchippers/xschem.git "$SRC_DIR/xschem"
 	cd "$SRC_DIR/xschem"
 	./configure
 else
+	echo ">>>> Updating xschem"
 	cd "$SRC_DIR/xschem"
 	git pull
 fi
@@ -122,11 +128,13 @@ make -j$(nproc) && sudo make install
 # Install/update xschem-gaw
 # -------------------------
 if [ ! -d "$SRC_DIR/xschem-gaw" ]; then
+	echo ">>>> Installing gaw"
         git clone https://github.com/StefanSchippers/xschem-gaw.git "$SRC_DIR/xschem-gaw"
         cd "$SRC_DIR/xschem-gaw"
         aclocal && automake --add-missing && autoconf
 	./configure
 else
+	echo ">>>> Updating gaw"
         cd "$SRC_DIR/xschem-gaw"
         git pull
 fi
@@ -136,11 +144,13 @@ make -j$(nproc) && sudo make install
 # Install/update magic
 # --------------------
 if [ ! -d "$SRC_DIR/magic" ]; then
+	echo ">>>> Installing magic"
         git clone https://github.com/RTimothyEdwards/magic.git "$SRC_DIR/magic"
         cd "$SRC_DIR/magic"
         git checkout magic-8.3
 	./configure
 else
+	echo ">>>> Updating magic"
         cd "$SRC_DIR/magic"
         git pull
 fi
@@ -150,23 +160,47 @@ make -j$(nproc) && sudo make install
 # Install/update netgen
 # ---------------------
 if [ ! -d "$SRC_DIR/netgen" ]; then
+	echo ">>>> Installing netgen"
         git clone https://github.com/RTimothyEdwards/netgen.git "$SRC_DIR/netgen"
         cd "$SRC_DIR/netgen"
 	git checkout netgen-1.5
         ./configure
 else
+	echo ">>>> Updating netgen"
         cd "$SRC_DIR/netgen"
         git pull
 fi
 make -j$(nproc) && sudo make install
 
 
+# Install/update ngspice
+# ----------------------
+if [ ! -d  "$SRC_DIR/ngspice" ]; then
+	echo ">>>> Installing ngspice"
+	mkdir "$SRC_DIR/ngspice"
+	cd "$SRC_DIR"
+	wget https://sourceforge.net/projects/ngspice/files/ng-spice-rework/36/ngspice-36.tar.gz
+	gunzip ngspice-36.tar.gz
+	tar xf ngspice-36.tar
+	rm ngspice-36.tar
+	cd "$SRC_DIR/ngspice-36"
+	sudo apt install -y libxaw7-dev libfftw3-dev libreadline-dev
+	./configure
+	make -j$(nproc) && sudo make install
+fi
+
+
 # Install/update spyci
 # --------------------
 if [ ! -d "$SRC_DIR/spyci" ]; then
+	echo ">>>> Installing spyci"
 	git clone https://github.com/gmagno/spyci.git "$SRC_DIR/spyci"
+	cd "$SRC_DIR/spyci"
+else
+	echo ">>>> Updating spyci"
+	cd "$SRC_DIR/spyci"
+	git pull
 fi
-cd "$SRC_DIR/spyci"
 sudo python3 setup.py install
 
 
@@ -206,6 +240,6 @@ chmod 750 "$HOME/iic-init.sh"
 # Finished
 # --------
 echo ""
-echo "All done. Please test the OpenLane install by running"
-echo ">> make test"
+echo ">>>> All done. Please test the OpenLane install by running"
+echo ">>>> make test"
 
