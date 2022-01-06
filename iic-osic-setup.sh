@@ -24,6 +24,8 @@ export SCRIPT_DIR=$(dirname $(realpath "$0"))
 
 # Update Ubuntu/Xubuntu installation
 # ----------------------------------
+# the following is needed for xschem
+sudo sed -i 's/# deb-src/deb-src/g' /etc/apt/sources.list
 sudo apt -qq update -y
 sudo apt -qq upgrade -y
 
@@ -40,13 +42,14 @@ sudo apt -qq autoremove -y
 # ------------------------------------------
 echo "Installing required (and useful) packages via APT"
 sudo apt -qq install -y docker.io git ngspice klayout iverilog gtkwave ghdl \
-	verilator yosys xdot python3 libgtk-3-dev build-essential xterm \
+	verilator yosys xdot python3 python3-pip libgtk-3-dev build-essential xterm \
 	octave octave-signal octave-communications octave-control \
 	htop mc vim vim-gtk3 kdiff3 \
 	graphicsmagick ghostscript mesa-common-dev libglu1-mesa-dev csh tcsh \
 	tcl-dev tk-dev m4 flex bison libxpm-dev libx11-6 libx11-dev libxrender1 libxrender-dev \
 	libxcb1 libx11-xcb-dev libcairo2 libcairo2-dev tcl8.6 tcl8.6-dev tk8.6 tk8.6-dev \
-	flex bison libxpm4 libxpm-dev gawk
+	flex bison libxpm4 libxpm-dev gawk \
+	aclocal automake autoconf
 
 
 # Add user to Docker group
@@ -84,6 +87,7 @@ cd "$OPENLANE_DIR"
 echo "Pulling latest OpenLane version"
 make pull-openlane
 echo "Creating/updating PDK"
+rm -rf $PDK_ROOT/skywater-pdk # FIXME WA otherwise `git clone` fails
 make pdk
 
 
@@ -160,7 +164,7 @@ make -j$(nproc) && sudo make install
 # Install/update spyci
 # --------------------
 if [ ! -d "$SRC_DIR/spyci" ]; then
-	git clone git@github.com:gmagno/spyci.git "$SRC_DIR/spyci"
+	git clone https://github.com/gmagno/spyci.git "$SRC_DIR/spyci"
 fi
 cd "$SRC_DIR/spyci"
 sudo python3 setup.py install
