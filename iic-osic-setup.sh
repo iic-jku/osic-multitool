@@ -134,6 +134,9 @@ if [ ! -d "$SRC_DIR/xschem-gaw" ]; then
         cd "$SRC_DIR/xschem-gaw"
         aclocal && automake --add-missing && autoconf
 	./configure
+	# FIXME this is just a WA
+	sed -i 's/GETTEXT_MACRO_VERSION = 0.20/GETTEXT_MACRO_VERSION = 0.19/g' po/Makefile
+
 else
 	echo ">>>> Updating gaw"
         cd "$SRC_DIR/xschem-gaw"
