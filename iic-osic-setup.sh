@@ -2,7 +2,7 @@
 # ==============================================================
 # Initialization of IIC Open-Source EDA Environment
 #
-# (c) 2021 Harald Pretl
+# (c) 2021-2022 Harald Pretl
 # Institute for Integrated Circuits
 # Johannes Kepler University Linz
 #
@@ -14,8 +14,8 @@
 # ------------------------
 export MY_PDK=/usr/local/share/pdk
 export MY_STDCELL=sky130_fd_sc_hd
-export SRC_DIR=$HOME/src
-export OPENLANE_DIR=$HOME/OpenLane
+export SRC_DIR="$HOME/src"
+export OPENLANE_DIR="$HOME/OpenLane"
 export SCRIPT_DIR=$(dirname $(realpath "$0"))
 export NGSPICE_VERSION=36
 
@@ -25,16 +25,17 @@ export NGSPICE_VERSION=36
 
 # Update Ubuntu/Xubuntu installation
 # ----------------------------------
-# the following is needed for xschem
+# the sed is needed for xschem build
 echo ">>>> Update packages"
 sudo sed -i 's/# deb-src/deb-src/g' /etc/apt/sources.list
 sudo apt -qq update -y
 sudo apt -qq upgrade -y
 
 
-# Optional removal of not needed packages to free up space, important for VirtualBox
-# ----------------------------------------------------------------------------------
+# Optional removal of unneeded packages to free up space, important for VirtualBox
+# --------------------------------------------------------------------------------
 echo ">>>> Removing packages to free up space"
+# FIXME could improve this list
 sudo apt -qq remove -y libreoffice-* pidgin* thunderbird* transmission* xfburn* \
 	gnome-mines gnome-sudoku sgt-puzzles parole gimp*
 sudo apt -qq autoremove -y
@@ -43,16 +44,17 @@ sudo apt -qq autoremove -y
 # Install all the packages available via apt
 # ------------------------------------------
 echo ">>>> Installing required (and useful) packages via APT"
-# FIXME ngspice installed separately, as version in LTS is too old
+# FIXME ngspice installed separately, as APT version in LTS is too old
 sudo apt -qq install -y docker.io git klayout iverilog gtkwave ghdl \
-	verilator yosys xdot python3 python3-pip libgtk-3-dev build-essential xterm \
+	verilator yosys xdot python3 python3-pip \
+	build-essential automake autoconf gawk m4 flex bison \
 	octave octave-signal octave-communications octave-control \
-	htop mc vim vim-gtk3 kdiff3 \
-	graphicsmagick ghostscript mesa-common-dev libglu1-mesa-dev csh tcsh \
-	tcl-dev tk-dev m4 flex bison libxpm-dev libx11-6 libx11-dev libxrender1 libxrender-dev \
-	libxcb1 libx11-xcb-dev libcairo2 libcairo2-dev tcl8.6 tcl8.6-dev tk8.6 tk8.6-dev \
-	flex bison libxpm4 libxpm-dev gawk \
-	automake autoconf
+	xterm csh tcsh htop mc vim vim-gtk3 kdiff3 \
+	tcl8.6 tcl8.6-dev tk8.6 tk8.6-dev \
+	graphicsmagick ghostscript mesa-common-dev libglu1-mesa-dev \
+	libxpm-dev libx11-6 libx11-dev libxrender1 libxrender-dev \
+	libxcb1 libx11-xcb-dev libcairo2 libcairo2-dev  \
+	libxpm4 libxpm-dev libgtk-3-dev
 
 
 # Add user to Docker group
@@ -72,8 +74,8 @@ fi
 
 # Install/update OpenLane from GitHub
 # -----------------------------------
-export PDK_ROOT=$MY_PDK
-export STD_CELL_LIBRARY=$MY_STDCELL
+export PDK_ROOT="$MY_PDK"
+export STD_CELL_LIBRARY="$MY_STDCELL"
 if [ -d "$OPENLANE_DIR" ]; then
 	echo ">>>> Updating OpenLane"
 	cd "$OPENLANE_DIR"
@@ -90,7 +92,7 @@ cd "$OPENLANE_DIR"
 echo ">>>> Pulling latest OpenLane version"
 make pull-openlane
 echo ">>>> Creating/updating PDK"
-rm -rf $PDK_ROOT/skywater-pdk # FIXME WA otherwise `git clone` fails
+rm -rf "$PDK_ROOT/skywater-pdk" # FIXME WA otherwise `git clone` fails
 make pdk
 
 
@@ -216,20 +218,20 @@ echo 'set SKYWATER_STDCELLS $env(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/spic
 
 
 # Create .spiceinit
-# ------------------
-echo "set num_threads=2" 							> "$HOME/.spiceinit"
+# -----------------
+echo "set num_threads=2" 							>  "$HOME/.spiceinit"
 echo "set ngbehavior=hsa" 							>> "$HOME/.spiceinit"
 echo "set ng_nomodcheck" 							>> "$HOME/.spiceinit"
 
 
 # Create iic-init.sh
-# -------------------
+# ------------------
 if [ ! -d "$HOME/.xschem" ]; then
 	mkdir "$HOME/.xschem"
 fi
-echo '#!/bin/sh' 								> "$HOME/iic-init.sh"
+echo '#!/bin/sh' 								>  "$HOME/iic-init.sh"
 echo '#' 									>> "$HOME/iic-init.sh"
-echo '# (c) 2021 Harald Pretl' 							>> "$HOME/iic-init.sh"
+echo '# (c) 2021-2022 Harald Pretl'						>> "$HOME/iic-init.sh"
 echo '# Institute for Integrated Circuits' 					>> "$HOME/iic-init.sh"
 echo '# Johannes Kepler University Linz' 					>> "$HOME/iic-init.sh"
 echo '#' 									>> "$HOME/iic-init.sh"
@@ -242,7 +244,9 @@ chmod 750 "$HOME/iic-init.sh"
 
 # Finished
 # --------
-echo ""
-echo ">>>> All done. Please test the OpenLane install by running"
-echo ">>>> make test"
+echo ''
+echo '>>>> All done. Please test the OpenLane install by running'
+echo '>>>> make test'
+echo ''
+echo 'Remember to run `source ./iic-init.sh` to initialize environment!'
 
