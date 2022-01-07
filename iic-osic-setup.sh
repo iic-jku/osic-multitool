@@ -17,6 +17,7 @@ export MY_STDCELL=sky130_fd_sc_hd
 export SRC_DIR=$HOME/src
 export OPENLANE_DIR=$HOME/OpenLane
 export SCRIPT_DIR=$(dirname $(realpath "$0"))
+export NGSPICE_VERSION=36
 
 # ---------------
 # Now go to work!
@@ -175,15 +176,14 @@ make -j$(nproc) && sudo make install
 
 # Install/update ngspice
 # ----------------------
-if [ ! -d  "$SRC_DIR/ngspice" ]; then
-	echo ">>>> Installing ngspice"
-	mkdir "$SRC_DIR/ngspice"
+if [ ! -d  "$SRC_DIR/ngspice-$NGSPICE_VERSION" ]; then
+	echo ">>>> Installing ngspice-$NGSPICE_VERSION"
 	cd "$SRC_DIR"
-	wget https://sourceforge.net/projects/ngspice/files/ng-spice-rework/36/ngspice-36.tar.gz
-	gunzip ngspice-36.tar.gz
-	tar xf ngspice-36.tar
-	rm ngspice-36.tar
-	cd "$SRC_DIR/ngspice-36"
+	wget https://sourceforge.net/projects/ngspice/files/ng-spice-rework/$NGSPICE_VERSION/ngspice-$NGSPICE_VERSION.tar.gz
+	gunzip ngspice-$NGSPICE_VERSION.tar.gz
+	tar xf ngspice-$NGSPICE_VERSION.tar
+	rm ngspice-$NGSPICE_VERSION.tar
+	cd "$SRC_DIR/ngspice-$NGSPICE_VERSION"
 	sudo apt install -y libxaw7-dev libfftw3-dev libreadline-dev
 	./configure
 	make -j$(nproc) && sudo make install
