@@ -109,5 +109,3 @@ Exemplary use on the SKY130A model file:
 
 * SPICE model file reducer: Add better control of output during run, maybe add a `--verbose` switch.
 * PEX: Add extraction of parasitic resistors.
-* Magic cheatsheet: Add IIC-specific keybindings, and fix the ones not properly working (see below).
-* Magic/cheatsheet: Some bindkeys seem to not work properly, like `f`, `y`, `.` -- check why and fix cheatsheet.
