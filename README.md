@@ -109,3 +109,5 @@ Exemplary use on the SKY130A model file:
 
 * SPICE model file reducer: Add better control of output during run, maybe add a `--verbose` switch.
 * PEX: Add extraction of parasitic resistors.
+* Add v2sch based on Stefan Schipper's script.
+* LVS and PEX: Check if digital SC are contained in netlist from SCH, if yes, add SPICE library of SC to NL.
