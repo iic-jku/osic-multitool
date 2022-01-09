@@ -9,7 +9,7 @@
 
 echo "Cleaning up files."
 
-rm -f *.sp
+rm -f *.spc
 rm -f *.ext
 rm -f *.log
 rm -f *.out
