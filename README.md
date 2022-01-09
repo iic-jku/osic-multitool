@@ -111,10 +111,10 @@ The script `iic-v2sch.awk` is a link to Stefan Schippers' conversion script `mak
 
 Usage:
 ```shell
-./iic-v2sch.awk input_file
+./iic-v2sch.awk input_file.v
 ```
 
-The `input_file` is the Powered-Verilog `.v` file.
+The `input_file` is the Powered-Verilog `.v` file. The symbol `input_file.sym` and the corresponding schematic `input_file.sch` are then created.
 
 ## Todo and Known Bugs
 
