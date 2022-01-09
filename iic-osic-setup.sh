@@ -149,6 +149,20 @@ fi
 make -j$(nproc) && sudo make install
 
 
+# Install/update xschem_sky130
+# ----------------------------
+# FIXME eventually this step is not required, as xschem_sky130 is contained in OpenLane
+if [ ! -d "$SRC_DIR/xschem_sky130" ]; then
+        echo ">>>> Installing xschem_sky130"
+        git clone https://github.com/StefanSchippers/xschem_sky130.git "$SRC_DIR/xschem_sky130"
+       	ln -s "$SRC_DIR/xschem_sky130/xschem_verilog_import/make_sky130_sch_from_verilog.awk" "$SCRIPT_DIR/iic-v2sch.awk"
+else
+        echo ">>>> Updating xschem_sky130"
+        cd "$SRC_DIR/xschem_sky130"
+        git pull
+fi
+
+
 # Install/update magic
 # --------------------
 if [ ! -d "$SRC_DIR/magic" ]; then

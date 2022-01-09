@@ -105,8 +105,18 @@ Exemplary use on the SKY130A model file:
 ./iic-spice-model-red.py sky130.lib.spice tt
 ```
 
+## Verilog to schematic/symbol conversion
+
+The script `iic-v2sch.awk` is a link to Stefan Schippers' conversion script `make_sky130_sch_from_verilog.awk`, see [xschem_sky130](https://github.com/StefanSchippers/xschem_sky130). It creates a symbol and schematic view for `xschem` from a Powered-Verilog file. The schematic can be used to run a transistor-level simulation of a Verilog design, or to run an LVS on transistor-level of a synthesized digital design.
+
+Usage:
+```shell
+./iic-v2sch.awk input_file
+```
+
+The `input_file` is the Powered-Verilog `.v` file.
+
 ## Todo and Known Bugs
 
 * SPICE model file reducer: Add better control of output during run, maybe add a `--verbose` switch.
 * PEX: Add extraction of parasitic resistors.
-* Add v2sch based on Stefan Schipper's script.
