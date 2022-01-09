@@ -1,1 +1,0 @@
-/home/harald/src/xschem_sky130/xschem_verilog_import/make_sky130_sch_from_verilog.awk
