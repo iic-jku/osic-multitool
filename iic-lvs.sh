@@ -75,8 +75,8 @@ fi
 
 # Extract SPICE netlist from schematic
 # ------------------------------------
-echo "... extracting netlist from schematic $CELL_SCH"
 if [ $VERILOG_MODE -eq 0 ]; then
+	echo "... extracting netlist from schematic $CELL_SCH"
 	xschem -n -s -q --no_x --tcl 'set top_subckt 1' "$CELL_SCH" -N "$NETLIST_SCH" > /dev/null
 
 	# Check if schematic netlist contains standard cells: if yes, include library with
