@@ -155,11 +155,13 @@ make -j$(nproc) && sudo make install
 if [ ! -d "$SRC_DIR/xschem_sky130" ]; then
         echo ">>>> Installing xschem_sky130"
         git clone https://github.com/StefanSchippers/xschem_sky130.git "$SRC_DIR/xschem_sky130"
-       	ln -s "$SRC_DIR/xschem_sky130/xschem_verilog_import/make_sky130_sch_from_verilog.awk" "$SCRIPT_DIR/iic-v2sch.awk"
 else
         echo ">>>> Updating xschem_sky130"
         cd "$SRC_DIR/xschem_sky130"
         git pull
+fi
+if [ ! -e "$SCRIPT_DIR/iic-v2sch.awk" ]; then
+	ln -s "$SRC_DIR/xschem_sky130/xschem_verilog_import/make_sky130_sch_from_verilog.awk" "$SCRIPT_DIR/iic-v2sch.awk"
 fi
 
 
