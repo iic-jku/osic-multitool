@@ -14,6 +14,9 @@
 #
 # The script can also compare a powered Verilog netlist named
 # <cellname.v> to a layout.
+#
+# The LVS script als can compare a netlist created from a 
+# Powered-Verilog-to-xschem-schematic conversion using iic-v2sch.
 # ==================================================================
 
 ERR_LVS_MISMATCH=1
@@ -72,8 +75,20 @@ fi
 
 # Extract SPICE netlist from schematic
 # ------------------------------------
+echo "... extracting netlist from schematic $CELL_SCH"
 if [ $VERILOG_MODE -eq 0 ]; then
-	xschem -n -s -q --no_x --tcl 'set top_subckt 1' "$CELL_SCH" -N "$NETLIST_SCH"
+	xschem -n -s -q --no_x --tcl 'set top_subckt 1' "$CELL_SCH" -N "$NETLIST_SCH" > /dev/null
+
+	# Check if schematic netlist contains standard cells: if yes, include library with
+	# SPICE netlists for the standard cells
+	if [ ! `grep -m 1 -e $STD_CELL_LIBRARY $NETLIST_SCH > /dev/null` ]; then
+        	# Remove the .end
+        	sed -i '/\.end\b/d' $NETLIST_SCH
+        	# Append sky130 lib
+        	cat $PDK_ROOT/sky130A/libs.ref/$STD_CELL_LIBRARY/spice/$STD_CELL_LIBRARY.spice >> $NETLIST_SCH
+        	# Add .end
+        	echo ".end" >> $NETLIST_SCH
+	fi
 fi
 
 # Generate extract script for magic
@@ -92,10 +107,12 @@ echo "quit" 						>> $EXT_SCRIPT
 
 # Extract SPICE netlist from layout with magic
 # --------------------------------------------
+echo "... extracting netlist from layout $CELL_LAY"
 magic -dnull -noconsole "$EXT_SCRIPT" > /dev/null 
 
 # Now run the lvs using netgen
 # ----------------------------
+echo "... run netgen"
 if [ $VERILOG_MODE -eq 0 ]; then
 	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$NETLIST_SCH $TOPCELL" \
 		$PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl \
