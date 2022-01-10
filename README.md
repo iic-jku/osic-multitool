@@ -120,3 +120,5 @@ The `input_file` is the Powered-Verilog `.v` file. The symbol `input_file.sym` a
 
 * SPICE model file reducer: Add better control of output during run, maybe add a `--verbose` switch.
 * PEX: Add extraction of parasitic resistors.
+* Inductor/trafo flow: (Semi)automatic generation of inductor and trafo layout, extraction of a SPICE model, adaption and support in LVS and PEX
+* A (simple) GUI to setup and run verification campaings (like DRC, LVS, PEX on a number of cells, with summarized run status)? Not sure about that, as open-source tooling is generally script-heavy and GUI-light.
