@@ -16,6 +16,6 @@ rm -rf *.out
 rm -rf *.raw
 rm -rf *.spice
 rm -rf *.vcd
-rm -rf ext*.tcl
-rm -rf drc*.tcl
-rm -rf pex*.tcl
+rm -rf ext_*.tcl
+rm -rf drc_*.tcl
+rm -rf pex_*.tcl

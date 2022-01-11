@@ -23,11 +23,11 @@ N 560 -760 720 -760 { lab=VSS}
 N 560 -890 660 -890 { lab=in}
 N 560 -1020 720 -1020 { lab=VDD}
 C {devices/ipin.sym} 560 -890 0 0 {name=p1 lab=in}
-C {devices/opin.sym} 880 -890 0 0 {name=p3 lab=out
+C {devices/opin.sym} 880 -890 0 0 {name=p2 lab=out
 }
-C {devices/ipin.sym} 560 -1020 0 0 {name=p5 lab=VDD
+C {devices/ipin.sym} 560 -1020 0 0 {name=p3 lab=VDD
 }
-C {devices/ipin.sym} 560 -760 0 0 {name=p6 lab=VSS}
+C {devices/ipin.sym} 560 -760 0 0 {name=p4 lab=VSS}
 C {sky130_fd_pr/pfet_g5v0d10v5.sym} 700 -950 0 0 {name=M10
 
 L=0.5

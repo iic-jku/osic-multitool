@@ -41,7 +41,7 @@ echo "select top cell" 					>> $EXT_SCRIPT
 echo "extract all" 					>> $EXT_SCRIPT
 echo "ext2spice cthresh 0.01"				>> $EXT_SCRIPT
 echo "ext2spice rthresh 1"				>> $EXT_SCRIPT
-echo "ext2spice subcircuit top on"			>> $EXT_SCRIPT
+echo "ext2spice subcircuit top off"			>> $EXT_SCRIPT
 echo "ext2spice format ngspice" 			>> $EXT_SCRIPT
 echo "ext2spice -o $NETLIST_PEX" 			>> $EXT_SCRIPT
 echo "quit" 						>> $EXT_SCRIPT
