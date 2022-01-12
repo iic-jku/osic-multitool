@@ -16,7 +16,9 @@ export MY_PDK=/usr/local/share/pdk
 export MY_STDCELL=sky130_fd_sc_hd
 export SRC_DIR="$HOME/src"
 export OPENLANE_DIR="$HOME/OpenLane"
-export SCRIPT_DIR=$(dirname $(realpath "$0"))
+my_path=$(realpath "$0")
+my_dir=$(dirname "$my_path")
+export SCRIPT_DIR="$my_dir"
 export NGSPICE_VERSION=36
 
 # ---------------
@@ -59,7 +61,7 @@ sudo apt -qq install -y docker.io git klayout iverilog gtkwave ghdl \
 
 # Add user to Docker group
 # ------------------------
-sudo usermod -aG docker $USER
+sudo usermod -aG docker "$USER"
 
 
 # Create PDK directory if it does not yet exist
@@ -68,7 +70,7 @@ if [ ! -d "$MY_PDK" ]; then
 	echo ">>>> Creating PDK directory $MY_PDK"
 	
 	sudo mkdir "$MY_PDK"
-	sudo chown $USER:staff "$MY_PDK"
+	sudo chown "$USER:staff" "$MY_PDK"
 fi
 
 
@@ -78,7 +80,7 @@ export PDK_ROOT="$MY_PDK"
 export STD_CELL_LIBRARY="$MY_STDCELL"
 if [ -d "$OPENLANE_DIR" ]; then
 	echo ">>>> Updating OpenLane"
-	cd "$OPENLANE_DIR"
+	cd "$OPENLANE_DIR" || exit
 	git pull
 else
 	echo ">>>> Pulling OpenLane from GitHub"
@@ -88,7 +90,7 @@ fi
 
 # Update OpenLane
 # ---------------
-cd "$OPENLANE_DIR"
+cd "$OPENLANE_DIR" || exit
 echo ">>>> Pulling latest OpenLane version"
 make pull-openlane
 echo ">>>> Creating/updating PDK"
@@ -99,10 +101,10 @@ make pdk
 # Apply SPICE modellib reducer
 # ----------------------------
 echo ">>>> Applying SPICE model library reducer"
-cd "$PDK_ROOT/sky130A/libs.tech/ngspice"
-$SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice tt
-$SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice ss
-$SCRIPT_DIR/iic-spice-model-red.py sky130.lib.spice ff
+cd "$PDK_ROOT/sky130A/libs.tech/ngspice" || exit
+"$SCRIPT_DIR/iic-spice-model-red.py" sky130.lib.spice tt
+"$SCRIPT_DIR/iic-spice-model-red.py" sky130.lib.spice ss
+"$SCRIPT_DIR/iic-spice-model-red.py" sky130.lib.spice ff
 
 
 # Add IIC custom bindkeys to magicrc file
@@ -118,14 +120,14 @@ if [ ! -d "$SRC_DIR/xschem" ]; then
 	echo ">>>> Installing xschem"
 	sudo apt build-dep -y xschem
 	git clone https://github.com/StefanSchippers/xschem.git "$SRC_DIR/xschem"
-	cd "$SRC_DIR/xschem"
+	cd "$SRC_DIR/xschem" || exit
 	./configure
 else
 	echo ">>>> Updating xschem"
-	cd "$SRC_DIR/xschem"
+	cd "$SRC_DIR/xschem" || exit
 	git pull
 fi
-make -j$(nproc) && sudo make install
+make -j"$(nproc)" && sudo make install
 
 
 # Install/update xschem-gaw
@@ -133,7 +135,7 @@ make -j$(nproc) && sudo make install
 if [ ! -d "$SRC_DIR/xschem-gaw" ]; then
 	echo ">>>> Installing gaw"
         git clone https://github.com/StefanSchippers/xschem-gaw.git "$SRC_DIR/xschem-gaw"
-        cd "$SRC_DIR/xschem-gaw"
+        cd "$SRC_DIR/xschem-gaw" || exit
         aclocal && automake --add-missing && autoconf
 	./configure
 	# FIXME this is just a WA for 20.04 LTS
@@ -143,10 +145,10 @@ if [ ! -d "$SRC_DIR/xschem-gaw" ]; then
 	fi
 else
 	echo ">>>> Updating gaw"
-        cd "$SRC_DIR/xschem-gaw"
+        cd "$SRC_DIR/xschem-gaw" || exit
         git pull
 fi
-make -j$(nproc) && sudo make install
+make -j"$(nproc)" && sudo make install
 
 
 # Install/update xschem_sky130
@@ -157,7 +159,7 @@ if [ ! -d "$SRC_DIR/xschem_sky130" ]; then
         git clone https://github.com/StefanSchippers/xschem_sky130.git "$SRC_DIR/xschem_sky130"
 else
         echo ">>>> Updating xschem_sky130"
-        cd "$SRC_DIR/xschem_sky130"
+        cd "$SRC_DIR/xschem_sky130" || exit
         git pull
 fi
 if [ ! -e "$SCRIPT_DIR/iic-v2sch.awk" ]; then
@@ -170,15 +172,15 @@ fi
 if [ ! -d "$SRC_DIR/magic" ]; then
 	echo ">>>> Installing magic"
         git clone https://github.com/RTimothyEdwards/magic.git "$SRC_DIR/magic"
-        cd "$SRC_DIR/magic"
+        cd "$SRC_DIR/magic" || exit
         git checkout magic-8.3
 	./configure
 else
 	echo ">>>> Updating magic"
-        cd "$SRC_DIR/magic"
+        cd "$SRC_DIR/magic" || exit
         git pull
 fi
-make -j$(nproc) && sudo make install
+make -j"$(nproc)" && sudo make install
 
 
 # Install/update netgen
@@ -186,30 +188,30 @@ make -j$(nproc) && sudo make install
 if [ ! -d "$SRC_DIR/netgen" ]; then
 	echo ">>>> Installing netgen"
         git clone https://github.com/RTimothyEdwards/netgen.git "$SRC_DIR/netgen"
-        cd "$SRC_DIR/netgen"
+        cd "$SRC_DIR/netgen" || exit
 	git checkout netgen-1.5
         ./configure
 else
 	echo ">>>> Updating netgen"
-        cd "$SRC_DIR/netgen"
+        cd "$SRC_DIR/netgen" || exit
         git pull
 fi
-make -j$(nproc) && sudo make install
+make -j"$(nproc)" && sudo make install
 
 
 # Install/update ngspice
 # ----------------------
 if [ ! -d  "$SRC_DIR/ngspice-$NGSPICE_VERSION" ]; then
 	echo ">>>> Installing ngspice-$NGSPICE_VERSION"
-	cd "$SRC_DIR"
+	cd "$SRC_DIR" || exit
 	wget https://sourceforge.net/projects/ngspice/files/ng-spice-rework/$NGSPICE_VERSION/ngspice-$NGSPICE_VERSION.tar.gz
 	gunzip ngspice-$NGSPICE_VERSION.tar.gz
 	tar xf ngspice-$NGSPICE_VERSION.tar
 	rm ngspice-$NGSPICE_VERSION.tar
-	cd "$SRC_DIR/ngspice-$NGSPICE_VERSION"
+	cd "$SRC_DIR/ngspice-$NGSPICE_VERSION" || exit
 	sudo apt install -y libxaw7-dev libfftw3-dev libreadline-dev
 	./configure
-	make -j$(nproc) && sudo make install
+	make -j"$(nproc)" && sudo make install
 fi
 
 
@@ -218,10 +220,10 @@ fi
 if [ ! -d "$SRC_DIR/spyci" ]; then
 	echo ">>>> Installing spyci"
 	git clone https://github.com/gmagno/spyci.git "$SRC_DIR/spyci"
-	cd "$SRC_DIR/spyci"
+	cd "$SRC_DIR/spyci" || exit
 else
 	echo ">>>> Updating spyci"
-	cd "$SRC_DIR/spyci"
+	cd "$SRC_DIR/spyci" || exit
 	git pull
 fi
 sudo python3 setup.py install
@@ -237,34 +239,37 @@ echo 'set SKYWATER_STDCELLS $env(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/spic
 
 # Create .spiceinit
 # -----------------
-echo "set num_threads=2" 							>  "$HOME/.spiceinit"
-echo "set ngbehavior=hsa" 							>> "$HOME/.spiceinit"
-echo "set ng_nomodcheck" 							>> "$HOME/.spiceinit"
-
+{
+	echo "set num_threads=2"
+	echo "set ngbehavior=hsa"
+	echo "set ng_nomodcheck"
+} > "$HOME/.spiceinit"
 
 # Create iic-init.sh
 # ------------------
 if [ ! -d "$HOME/.xschem" ]; then
 	mkdir "$HOME/.xschem"
 fi
-echo '#!/bin/sh' 								>  "$HOME/iic-init.sh"
-echo '#' 									>> "$HOME/iic-init.sh"
-echo '# (c) 2021-2022 Harald Pretl'						>> "$HOME/iic-init.sh"
-echo '# Institute for Integrated Circuits' 					>> "$HOME/iic-init.sh"
-echo '# Johannes Kepler University Linz' 					>> "$HOME/iic-init.sh"
-echo '#' 									>> "$HOME/iic-init.sh"
-echo "export PDK_ROOT=$MY_PDK" 							>> "$HOME/iic-init.sh"
-echo "export STD_CELL_LIBRARY=$MY_STDCELL" 					>> "$HOME/iic-init.sh"
-echo 'cp -f $PDK_ROOT/sky130A/libs.tech/xschem/xschemrc $HOME/.xschem' 		>> "$HOME/iic-init.sh"
-echo 'cp -f $PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc $HOME/.magicrc' 	>> "$HOME/iic-init.sh"
+{
+	echo '#!/bin/sh'
+	echo '#'
+	echo '# (c) 2021-2022 Harald Pretl'
+	echo '# Institute for Integrated Circuits'
+	echo '# Johannes Kepler University Linz'
+	echo '#'
+	echo "export PDK_ROOT=$MY_PDK"
+	echo "export STD_CELL_LIBRARY=$MY_STDCELL"
+	echo 'cp -f $PDK_ROOT/sky130A/libs.tech/xschem/xschemrc $HOME/.xschem'
+	echo 'cp -f $PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc $HOME/.magicrc'
+} > "$HOME/iic-init.sh"
 chmod 750 "$HOME/iic-init.sh"
 
 
 # Finished
 # --------
-echo ''
+echo ""
 echo '>>>> All done. Please test the OpenLane install by running'
 echo '>>>> make test'
-echo ''
+echo ""
 echo 'Remember to run `source ./iic-init.sh` to initialize environment!'
 

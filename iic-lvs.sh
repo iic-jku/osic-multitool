@@ -2,7 +2,7 @@
 # ==================================================================
 # SKY130 LVS (Layout-vs-Schematic) Check
 #
-# (c) 2021 Harald Pretl
+# (c) 2021-2022 Harald Pretl
 # Institute for Integrated Circuits, Johannes Kepler University Linz
 #
 # Usage: iic-lvs <cellname>
@@ -19,7 +19,7 @@
 # Powered-Verilog-to-xschem-schematic conversion using iic-v2sch.
 # ==================================================================
 
-ERR_LVS_MISMATCH=1
+# ERR_LVS_MISMATCH=1 reserved
 ERR_FILE_NOT_FOUND=2
 ERR_NO_PARAM=3
 
@@ -81,29 +81,33 @@ if [ $VERILOG_MODE -eq 0 ]; then
 
 	# Check if schematic netlist contains standard cells: if yes, include library with
 	# SPICE netlists for the standard cells
-	if [ ! `grep -m 1 -e $STD_CELL_LIBRARY $NETLIST_SCH > /dev/null` ]; then
+	if [ ! $(grep -m 1 -e "$STD_CELL_LIBRARY" "$NETLIST_SCH" > /dev/null) ]; then
         	# Remove the .end
-        	sed -i '/\.end\b/d' $NETLIST_SCH
+        	sed -i '/\.end\b/d' "$NETLIST_SCH"
         	# Append sky130 lib
-        	cat $PDK_ROOT/sky130A/libs.ref/$STD_CELL_LIBRARY/spice/$STD_CELL_LIBRARY.spice >> $NETLIST_SCH
+        	cat "$PDK_ROOT/sky130A/libs.ref/$STD_CELL_LIBRARY/spice/$STD_CELL_LIBRARY.spice" >> "$NETLIST_SCH"
         	# Add .end
-        	echo ".end" >> $NETLIST_SCH
+        	echo ".end" >> "$NETLIST_SCH"
 	fi
 fi
 
 # Generate extract script for magic
 # ---------------------------------
-echo "load $CELL_LAY" 					> $EXT_SCRIPT
-echo "select top cell"                                  >> $EXT_SCRIPT
-echo "extract all" 					>> $EXT_SCRIPT
-echo "ext2spice lvs" 					>> $EXT_SCRIPT
+{
+	echo "load $CELL_LAY"
+	echo "select top cell"
+	echo "extract all"
+	echo "ext2spice lvs"
+} > "$EXT_SCRIPT"
 if [ $VERILOG_MODE -eq 1 ]; then
 	# this is needed for the LVS in netgen, because the standard cells
 	# are not instantiated in the (powered) .v file
-	echo "ext2spice subcircuit descend off"		>> $EXT_SCRIPT
+	echo "ext2spice subcircuit descend off"		>> "$EXT_SCRIPT"
 fi
-echo "ext2spice -o $NETLIST_LAY" 			>> $EXT_SCRIPT
-echo "quit" 						>> $EXT_SCRIPT
+{
+	echo "ext2spice -o $NETLIST_LAY"
+	echo "quit"
+} >> "$EXT_SCRIPT"
 
 # Extract SPICE netlist from layout with magic
 # --------------------------------------------
@@ -115,14 +119,14 @@ magic -dnull -noconsole "$EXT_SCRIPT" > /dev/null
 echo "... run netgen"
 if [ $VERILOG_MODE -eq 0 ]; then
 	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$NETLIST_SCH $TOPCELL" \
-		$PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl \
+		"$PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl" \
 		"$LVS_REPORT" > "$LVS_LOG"
 else
 	# this is not needed if subcircuit descend off is applied during extract
 	# UPDATE: still needed, the subcircuit descend off seems to not work
 	export MAGIC_EXT_USE_GDS=1
 	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$CELL_V $TOPCELL" \
-                $PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl \
+                "$PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl" \
                 "$LVS_REPORT" > "$LVS_LOG"
 fi
 

@@ -2,7 +2,7 @@
 # ==================================================================
 # SKY130 DRC (Design Rule Check)
 #
-# (c) 2021 Harald Pretl
+# (c) 2021-2022 Harald Pretl
 # Institute for Integrated Circuits, Johannes Kepler University Linz
 #
 # Usage: iic-drc <cellname>
@@ -10,7 +10,7 @@
 # The script expects the layout <cellname.mag> in the current folder.
 # ==================================================================
 
-ERR_DRC=1
+# ERR_DRC=1 reserved
 ERR_FILE_NOT_FOUND=2
 ERR_NO_PARAM=3
 
@@ -33,19 +33,21 @@ fi
 
 # Generate DRC script for magic
 # -----------------------------
-echo "load $CELL_LAY" 					> $EXT_SCRIPT
-echo 'select top cell'					>> $EXT_SCRIPT
-echo 'drc euclidean on'					>> $EXT_SCRIPT
-echo 'drc style drc(full)'				>> $EXT_SCRIPT
-echo 'drc check'					>> $EXT_SCRIPT
-echo 'set drc_res [drc listall why]'			>> $EXT_SCRIPT
-echo 'puts stdout "--------------"'			>> $EXT_SCRIPT
-echo 'drc count'					>> $EXT_SCRIPT
-echo 'puts stdout "Error details:"'			>> $EXT_SCRIPT
-echo 'puts stdout "--------------"'			>> $EXT_SCRIPT
-echo 'foreach {errtype coordlist} $drc_res {'		>> $EXT_SCRIPT
-echo '  puts stdout $errtype }'				>> $EXT_SCRIPT
-echo 'quit' 						>> $EXT_SCRIPT
+{
+	echo "load $CELL_LAY"
+	echo 'select top cell'
+	echo 'drc euclidean on'
+	echo 'drc style drc(full)'
+	echo 'drc check'
+	echo 'set drc_res [drc listall why]'
+	echo 'puts stdout "--------------"'
+	echo 'drc count'
+	echo 'puts stdout "Error details:"'
+	echo 'puts stdout "--------------"'
+	echo 'foreach {errtype coordlist} $drc_res {'
+	echo '  puts stdout $errtype }'
+	echo 'quit'
+} > "$EXT_SCRIPT"
 
 # Run DRC with magic
 # ------------------
