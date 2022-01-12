@@ -57,10 +57,10 @@ _Note that this DRC can show additional errors compared to the (fast) DRC during
 A fully-automatic PEX script for parasitic extraction is prepared. Run the PEX by using 
 
 ```shell
-./iic-pex.sh cellname
+./iic-pex.sh cellname [mode]
 ```
 
-where `cellname` is the name of the layout cell `cellname.mag`.
+where `cellname` is the name of the layout cell `cellname.mag`. The PEX script support 3 different extraction modes: 1=C-decoupled, 2=C-coupled, 3=full-RC. If the parameter `mode` is not supplied then the default mode 2 (C-coupled) will be used.
 
 The resulting `SPICE` netlist including parasitic wiring components is called `cellname.pex.spice`.
 
