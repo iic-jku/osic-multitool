@@ -10,30 +10,37 @@
 #
 # This script installs OpenLane, SKY130 PDK, Caravel and the
 # Caravel User Project template with the correct versions.
+#
+# This script is based on Matt Venn's 
+# https://github.com/mattvenn/project0_test
 # ==============================================================
 
+my_path=$(realpath "$0")
+my_dir=$(dirname "$my_path")
+export SCRIPT_DIR="$my_dir"
+
 # Get the correct versions and install paths
-source iic-init-caravel.sh
+"$SCRIPT_DIR/iic-init-caravel.sh"
 
 # Install dependencies via package manager
 sudo apt install -y tcsh csh tcl-dev tk-dev libcairo2-dev
 
-# not sure why this is needed: set -eu
+set -eu
 
 # Get caravel user project with the right version
-if [ ! -d "$HOME/caravel" ]; then
-	mkdir "$HOME/caravel"
+if [ ! -d "$CARAVEL_ENV_ROOT" ]; then
+	mkdir "$CARAVEL_ENV_ROOT"
 fi
-cd "$HOME/caravel" || exit
+cd "$CARAVEL_ENV_ROOT" || exit
 
 git clone https://github.com/efabless/caravel_user_project.git
 cd caravel_user_project || exit
-git checkout "$USER_PROJECT_COMMIT"
+git checkout $USER_PROJECT_COMMIT
 make install
 
 # Get caravel with the right version
 cd caravel || exit
-git checkout "$CARAVEL_COMMIT"
+git checkout $CARAVEL_COMMIT
 cd ..
 
 # Build the correct PDK version for Caravel

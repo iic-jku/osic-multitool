@@ -32,19 +32,19 @@ source ./iic-init.sh
 
 ## Initialization of efabless.com Caravel SoC harness
 
-In the directory `caravel` two scripts are provided: Using `iic-init-caravel.sh` the correct environment variables are set so that the Caravel flow runs without errors. Initialize your environment with
+In the directory `caravel_setup` two scripts are provided: Using `iic-init-caravel.sh` the correct environment variables are set so that the Caravel flow runs without errors. Initialize your environment with
 
 ```shell
 source ./iic-init-caravel.sh
 ```
 
-After setting up the environment, the script `iic-caravel-setup.sh` installs all required tools (with the correct versions) for Caravel build. Simply run
+After setting up the environment, the script `iic-setup-caravel.sh` installs all required tools (with the correct versions) for a Caravel build. Simply run
 
 ```shell
-./iic-caravel-setup.sh
+./iic-setup-caravel.sh
 ```
 
-The your environment is prepared. Follow the instructions at https://github.com/efabless/caravel_user_project/blob/main/docs/source/index.rst for a build of the Caravel user area.
+then your environment is prepared. Follow the instructions at https://github.com/efabless/caravel_user_project/blob/main/docs/source/index.rst for a build of the Caravel user area.
 
 
 ## LVS script
