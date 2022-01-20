@@ -46,6 +46,14 @@ After setting up the environment, the script `iic-setup-caravel.sh` installs all
 
 then your environment is prepared. Follow the instructions at https://github.com/efabless/caravel_user_project/blob/main/docs/source/index.rst for a build of the Caravel user area.
 
+After setting up a local `caravel_user_project` it can be pushed into another GitHub repo (to change the name of the repo). Note: before doing the next steps a new repo should be created in Github. Then do:
+
+```shell
+git checkout -b <branch>
+git remote remove origin
+git remote add origin git@github.com:<username>/<reponame>.git
+git push -u origin <branch>
+```
 
 ## LVS script
 
