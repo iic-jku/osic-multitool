@@ -6,11 +6,11 @@
 \usepackage{amssymb}
 \usepackage{graphicx}
 \usepackage{booktabs}
-\usepackage{hyperref}
+\usepackage[colorlinks=true]{hyperref}
 \usepackage{parskip}
 \author{Harald Pretl\\Institute for Integrated Circuits, Johannes Kepler University Linz}
 \title{Magic VLSI Cheatsheet}
-\date{\copyright~2021}
+\date{\copyright~2021--2022}
 \newcommand{\key}[1]{\texttt{\textbf{#1}}}
 \newcommand{\mac}[1]{\texttt{#1}}
 \newcommand{\argu}[1]{\textit{#1}}
@@ -18,7 +18,11 @@
 \begin{document}
 	\maketitle
 	
-	This cheat sheet compiles useful commands (to be entered in the Tcl window) and bind keys (in the layout window) as well as a summary of the mouse operations for the different tool modes. This compilation relates to Magic 8.3 (see \url{https://github.com/RTimothyEdwards/magic}).
+	This cheat sheet compiles useful commands (to be entered in the Tcl console) and bind keys (in the layout window) as well as a summary of the mouse operations for the different tool modes. This compilation relates to Magic 8.3 (see \url{https://github.com/RTimothyEdwards/magic}).
+	
+	A comprehensive Magic documentation and description of all macros can be found at \url{http://opencircuitdesign.com/magic/userguide.html}.
+	
+	The command \texttt{macro layout} in the Magic Tcl console lists all defined macros.
 	
 	\newpage
 
