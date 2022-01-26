@@ -35,7 +35,7 @@ cd "$CARAVEL_ENV_ROOT" || exit
 
 git clone https://github.com/efabless/caravel_user_project.git
 cd caravel_user_project || exit
-git checkout $USER_PROJECT_COMMIT
+git checkout $CARAVEL_USER_PROJECT_COMMIT
 make install
 
 # Get caravel with the right version
