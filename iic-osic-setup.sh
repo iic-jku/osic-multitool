@@ -51,7 +51,7 @@ sudo apt -qq install -y docker.io git klayout iverilog gtkwave ghdl \
 	verilator yosys xdot python3 python3-pip \
 	build-essential automake autoconf gawk m4 flex bison \
 	octave octave-signal octave-communications octave-control \
-	xterm csh tcsh htop mc vim vim-gtk3 kdiff3 \
+	xterm csh tcsh htop mc gedit vim vim-gtk3 kdiff3 \
 	tcl8.6 tcl8.6-dev tk8.6 tk8.6-dev \
 	graphicsmagick ghostscript mesa-common-dev libglu1-mesa-dev \
 	libxpm-dev libx11-6 libx11-dev libxrender1 libxrender-dev \
