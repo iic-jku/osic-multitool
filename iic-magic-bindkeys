@@ -1,5 +1,5 @@
 # Useful bindkeys for Magic VLSI
-# (c) 2021 Harald Pretl
+# (c) 2021-2022 Harald Pretl
 # Institute for Integrated Circuits, Johannes Kepler University Linz
 
 macro 0 "see no * ; see locali ; see mcon"
@@ -9,6 +9,10 @@ macro # "see no * ; see via2   ; see metal3 ; see via3"
 macro $ "see no * ; see via3   ; see metal4 ; see via4"
 macro % "see no * ; see via4   ; see metal5"
 macro 9 "see *"
+
+# Here a useful one proposed by Matt Guthaus
+
+macro = "drc find; findbox zoom; zoom 16"
 
 # Here a few from sky130A/libs.tech/magic/sky130A-BindKeys
 # mainly use the ones not altering original magic useage, as we
