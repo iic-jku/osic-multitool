@@ -32,27 +32,12 @@ source ./iic-init.sh
 
 ## Initialization of efabless.com Caravel SoC harness
 
-In the directory `caravel_setup` two scripts are provided: Using `iic-init-caravel.sh` the correct environment variables are set so that the Caravel flow runs without errors. Initialize your environment with
+Instructions for the setup of the efabless.com Caravel SoC harness can be found at https://github.com/efabless/caravel_user_project/blob/main/docs/source/roundtrip.rst.
+
+In the directory `caravel_setup` a script can be found to setup the environment variables as needed with: 
 
 ```shell
 source ./iic-init-caravel.sh
-```
-
-After setting up the environment, the script `iic-setup-caravel.sh` installs all required tools (with the correct versions) for a Caravel build. Simply run
-
-```shell
-./iic-setup-caravel.sh
-```
-
-then your environment is prepared. Follow the instructions at https://github.com/efabless/caravel_user_project/blob/main/docs/source/index.rst for a build of the Caravel user area.
-
-After setting up a local `caravel_user_project` it can be pushed into another GitHub repo (to change the name of the repo). Note: before doing the next steps a new repo should be created in Github. Then do:
-
-```shell
-git checkout -b <branch>
-git remote remove origin
-git remote add origin git@github.com:<username>/<reponame>.git
-git push -u origin <branch>
 ```
 
 ## LVS script
