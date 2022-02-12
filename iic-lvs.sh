@@ -59,23 +59,27 @@ if [ -f "$CELL_V" ]; then
 	VERILOG_MODE=1
 else
 	VERILOG_MODE=0
-	if [ ! -f "$CELL_SCH" ]; then
-		if [ ! -f "sch/$CELL_SCH" ]; then
-			echo "Schematic $CELL_SCH not found!"
-			exit $ERR_FILE_NOT_FOUND
-		else
-			export CELL_SCH="sch/$CELL_SCH"
-		fi
+	if [ -f "$CELL_SCH" ]; then
+		export CELL_SCH="$CELL_SCH"
+	elif [ -f "sch/$CELL_SCH" ]; then
+		export CELL_SCH="sch/$CELL_SCH"
+	elif [ -f "xschem/$CELL_SCH" ]; then
+		export CELL_SCH="xschem/$CELL_SCH"
+	else
+		echo "Schematic $CELL_SCH not found!"
+		exit $ERR_FILE_NOT_FOUND
 	fi
 fi
 
-if [ ! -f "$CELL_LAY" ]; then
-        if [ ! -f "lay/$CELL_LAY" ]; then
-                echo "Layout $CELL_LAY not found!"
-                exit $ERR_FILE_NOT_FOUND
-        else
-                export CELL_LAY="lay/$CELL_LAY"
-        fi
+if [ -f "$CELL_LAY" ]; then
+	export CELL_LAY="$CELL_LAY"
+elif [ -f "lay/$CELL_LAY" ]; then
+	export CELL_LAY="lay/$CELL_LAY"
+elif [ -f "mag/$CELL_LAY" ]; then
+	export CELL_LAY="mag/$CELL_LAY"
+else
+	echo "Layout $CELL_LAY not found!"
+        exit $ERR_FILE_NOT_FOUND
 fi
 
 # Initial checks passed, start working
