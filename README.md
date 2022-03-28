@@ -1,24 +1,24 @@
 # IIC-OSIC Tools
 
-**(c) 2021 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits**
+**(c) 2021-2022 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits**
 
 This repo contains various tools and examples for **Open-Source IC (OSIC) Design**. At this point only the open-source PDK [SKY130](https://github.com/google/skywater-pdk) from **SkyWater Technologies** and **Google** is supported.
 
 This flow is using for the digital components
-* [OpenLane](https://github.com/The-OpenROAD-Project/OpenLane) for the digital design flow,
+* [OpenLane/OpenROAD](https://github.com/The-OpenROAD-Project/OpenLane) for the digital RTL2GDS flow,
 * [Icarus Verilog](http://iverilog.icarus.com) and [Verilator](https://www.veripool.org/verilator/) for linting and digital simulation, and
-* [gtkwave](http://gtkwave.sourceforge.net) for digital waveform viewing.
+* [GTKWave](http://gtkwave.sourceforge.net) for digital waveform viewing.
 
 The analog/full custom components are using
-* [xschem](https://github.com/StefanSchippers/xschem) for schematic capture,
+* [Xschem](https://github.com/StefanSchippers/xschem) for schematic capture,
 * [ngspice](http://ngspice.sourceforge.net) for simulation,
-* [gaw](https://github.com/StefanSchippers/xschem-gaw) for analog waveform viewing,
-* [magic](https://github.com/RTimothyEdwards/magic) for custom layout generation, DRC and PEX, and
-* [netgen](https://github.com/RTimothyEdwards/netgen) for netlist compare (LVS).
+* [gaw3](https://github.com/StefanSchippers/xschem-gaw) for analog waveform viewing,
+* [Magic](https://github.com/RTimothyEdwards/magic) for custom layout generation, DRC, extraction, and PEX, and
+* [Netgen](https://github.com/RTimothyEdwards/netgen) for netlist compare (LVS).
 
-A viable alternative to `gaw` is to use `Python` for waveform viewing, using [spyci](https://github.com/gmagno/spyci).
+A viable alternative to `gaw` is to use `Python` for waveform viewing, using [Spyci](https://github.com/gmagno/spyci).
 
-For GDS file viewing and manipulation [klayout](https://www.klayout.de) is used.
+For `GDS` file viewing and manipulation [KLayout](https://www.klayout.de) is used.
 
 ## Initialization of SKY130 PDK and tools
 
@@ -82,9 +82,9 @@ The various temporary and results files and outputs can be easily removed from a
 ./iic-clean.sh
 ```
 
-## Cheatsheet for Magic VLSI
+## Cheatsheet for Magic
 
-In the folder `magic-cheatsheet` you can find a summary of important macros, keybindings, and mouse button operations for `magic` VLSI, relating to version 8.3.
+In the folder `magic-cheatsheet` you can find a summary of important macros, keybindings, and mouse button operations for `Magic`, relating to version 8.3.
 
 ## Example analog and digital designs
 
