@@ -48,11 +48,11 @@ sudo apt -qq upgrade -y
 
 # Optional removal of unneeded packages to free up space, important for VirtualBox
 # --------------------------------------------------------------------------------
-echo ">>>> Removing packages to free up space"
+#echo ">>>> Removing packages to free up space"
 # FIXME could improve this list
-sudo apt -qq remove -y libreoffice-* pidgin* thunderbird* transmission* xfburn* \
-	gnome-mines gnome-sudoku sgt-puzzles parole gimp*
-sudo apt -qq autoremove -y
+#sudo apt -qq remove -y libreoffice-* pidgin* thunderbird* transmission* xfburn* \
+#	gnome-mines gnome-sudoku sgt-puzzles parole gimp*
+#sudo apt -qq autoremove -y
 
 
 # Install all the packages available via apt
