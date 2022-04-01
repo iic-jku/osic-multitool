@@ -32,6 +32,8 @@ my_path=$(realpath "$0")
 my_dir=$(dirname "$my_path")
 export SCRIPT_DIR="$my_dir"
 export NGSPICE_VERSION=36
+# This selects which sky130 PDK flavor (A, B, all)  is installed
+export OPEN_PDK_ARGS="--with-sky130-variants=A"
 
 # ---------------
 # Now go to work!
