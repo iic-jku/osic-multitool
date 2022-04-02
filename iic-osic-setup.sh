@@ -24,7 +24,7 @@
 
 # Define setup environment
 # ------------------------
-export MY_PDK="$HOME/pdk"
+export MY_PDK_ROOT="$HOME/pdk"
 export MY_STDCELL=sky130_fd_sc_hd
 export SRC_DIR="$HOME/src"
 export OPENLANE_DIR="$HOME/OpenLane"
@@ -32,8 +32,9 @@ my_path=$(realpath "$0")
 my_dir=$(dirname "$my_path")
 export SCRIPT_DIR="$my_dir"
 export NGSPICE_VERSION=36
-# This selects which sky130 PDK flavor (A, B, all)  is installed
+# This selects which sky130 PDK flavor (A=sky130A, B=sky130B, all=both)  is installed
 export OPEN_PDK_ARGS="--with-sky130-variants=A"
+export MY_PDK=sky130A
 
 # ---------------
 # Now go to work!
@@ -80,17 +81,18 @@ sudo usermod -aG docker "$USER"
 
 # Create PDK directory if it does not yet exist
 # ---------------------------------------------
-if [ ! -d "$MY_PDK" ]; then
-	echo ">>>> Creating PDK directory $MY_PDK"
+if [ ! -d "$MY_PDK_ROOT" ]; then
+	echo ">>>> Creating PDK directory $MY_PDK_ROOT"
 	
-	sudo mkdir "$MY_PDK"
-	sudo chown "$USER:staff" "$MY_PDK"
+	sudo mkdir "$MY_PDK_ROOT"
+	sudo chown "$USER:staff" "$MY_PDK_ROOT"
 fi
 
 
 # Install/update OpenLane from GitHub
 # -----------------------------------
-export PDK_ROOT="$MY_PDK"
+export PDK_ROOT="$MY_PDK_ROOT"
+export PDK="$MY_PDK"
 export STD_CELL_LIBRARY="$MY_STDCELL"
 if [ -d "$OPENLANE_DIR" ]; then
 	echo ">>>> Updating OpenLane"
@@ -115,7 +117,7 @@ make pdk
 # Apply SPICE modellib reducer
 # ----------------------------
 echo ">>>> Applying SPICE model library reducer"
-cd "$PDK_ROOT/sky130A/libs.tech/ngspice" || exit
+cd "$PDK_ROOT/$PDK/libs.tech/ngspice" || exit
 "$SCRIPT_DIR/iic-spice-model-red.py" sky130.lib.spice tt
 "$SCRIPT_DIR/iic-spice-model-red.py" sky130.lib.spice ss
 "$SCRIPT_DIR/iic-spice-model-red.py" sky130.lib.spice ff
@@ -124,8 +126,8 @@ cd "$PDK_ROOT/sky130A/libs.tech/ngspice" || exit
 # Add IIC custom bindkeys to magicrc file
 # ---------------------------------------
 echo ">>>> Add custom bindkeys to magicrc"
-echo "# Custom bindkeys for IIC" 		>> "$PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc"
-echo "source $SCRIPT_DIR/iic-magic-bindkeys" 	>> "$PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc"
+echo "# Custom bindkeys for IIC" 		>> "$PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc"
+echo "source $SCRIPT_DIR/iic-magic-bindkeys" 	>> "$PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc"
 
 
 # Install/update xschem
@@ -245,11 +247,12 @@ sudo python3 setup.py install
 
 # Fix paths in xschemrc to point to correct PDK directory
 # -------------------------------------------------------
-sed -i 's/^set SKYWATER_MODELS/# set SKYWATER_MODELS/g' "$PDK_ROOT/sky130A/libs.tech/xschem/xschemrc"
-echo 'set SKYWATER_MODELS $env(PDK_ROOT)/sky130A/libs.tech/ngspice' >> "$PDK_ROOT/sky130A/libs.tech/xschem/xschemrc"
-sed -i 's/^set SKYWATER_STDCELLS/# set SKYWATER_STD_CELLS/g' "$PDK_ROOT/sky130A/libs.tech/xschem/xschemrc"
-echo 'set SKYWATER_STDCELLS $env(PDK_ROOT)/sky130A/libs.ref/sky130_fd_sc_hd/spice' >> "$PDK_ROOT/sky130A/libs.tech/xschem/xschemrc"
-
+sed -i 's/^set SKYWATER_MODELS/# set SKYWATER_MODELS/g' "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc"
+# shellcheck disable=SC2016
+echo 'set SKYWATER_MODELS $env(PDK_ROOT)/$env(PDK)/libs.tech/ngspice' >> "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc"
+sed -i 's/^set SKYWATER_STDCELLS/# set SKYWATER_STD_CELLS/g' "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc"
+# shellcheck disable=SC2016
+echo 'set SKYWATER_STDCELLS $env(PDK_ROOT)/$env(PDK)/libs.ref/sky130_fd_sc_hd/spice' >> "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc"
 
 # Create .spiceinit
 # -----------------
@@ -271,10 +274,13 @@ fi
 	echo '# Institute for Integrated Circuits'
 	echo '# Johannes Kepler University Linz'
 	echo '#'
-	echo "export PDK_ROOT=$MY_PDK"
+	echo "export PDK_ROOT=$MY_PDK_ROOT"
+	echo "export PDK=$MY_PDK"
 	echo "export STD_CELL_LIBRARY=$MY_STDCELL"
-	echo 'cp -f $PDK_ROOT/sky130A/libs.tech/xschem/xschemrc $HOME/.xschem'
-	echo 'cp -f $PDK_ROOT/sky130A/libs.tech/magic/sky130A.magicrc $HOME/.magicrc'
+	# shellcheck disable=SC2016
+	echo 'cp -f $PDK_ROOT/$PDK/libs.tech/xschem/xschemrc $HOME/.xschem'
+	# shellcheck disable=SC2016
+	echo 'cp -f $PDK_ROOT/$PDK/libs.tech/magic/$PDK.magicrc $HOME/.magicrc'
 } > "$HOME/iic-init.sh"
 chmod 750 "$HOME/iic-init.sh"
 
@@ -282,8 +288,9 @@ chmod 750 "$HOME/iic-init.sh"
 # Finished
 # --------
 echo ""
-echo '>>>> All done. Please test the OpenLane install by running'
-echo '>>>> make test'
+echo ">>>> All done. Please test the OpenLane install by running"
+echo ">>>> make test"
 echo ""
+# shellcheck disable=SC2016
 echo 'Remember to run `source ./iic-init.sh` to initialize environment!'
 
