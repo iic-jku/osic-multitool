@@ -105,7 +105,7 @@ if (len(sys.argv) == 2) or (len(sys.argv) == 3):
         f_out = open(outfile_name, 'w')
     except OSError:
         print('Error: Cannot write file ' + outfile_name + '.')
-        sys.exit(2)
+        sys.exit(1)
     
     is_warning = False
     process_file(infile_name, True)
@@ -115,7 +115,7 @@ if (len(sys.argv) == 2) or (len(sys.argv) == 3):
     print('Model file ' + outfile_name + ' written.')
     if is_warning == True:
         print('There have been warnings! Please check output log.')
-        sys.exit(1)
+        sys.exit(0)
     else:
         sys.exit(0) 
 else:
@@ -126,9 +126,8 @@ else:
     print('Usage: iic-spice-model-red <inputfile> [corner] (default corner = tt)')
     print()
     print('Return codes for script automation:')
-    print('  0 = all OK')
-    print('  1 = warnings')
-    print('  2 = errors')
-    print('  3 = call of script w/o parameters (= showing this message)')
+    print('  0 = all OK or warnings')
+    print('  1 = errors')
+    print('  2 = call of script w/o parameters (= showing this message)')
     print()
-    sys.exit(3)
+    sys.exit(2)
