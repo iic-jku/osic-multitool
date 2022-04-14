@@ -36,6 +36,7 @@
 ERR_FILE_NOT_FOUND=2
 ERR_NO_PARAM=3
 ERR_NO_VAR=4
+ERR_NO_RESULT=5
 
 if [ $# != 1 ]; then
 	echo "Usage: $0 <cellname>"
@@ -98,6 +99,17 @@ else
         exit $ERR_FILE_NOT_FOUND
 fi
 
+# Remove old netlists
+# -------------------
+
+if [ -f "$NETLIST_SCH" ]; then
+	rm -f "$NETLIST_SCH"
+fi
+
+if [ -f "$NETLIST_LAY" ]; then
+	rm -f "$NETLIST_LAY"
+fi
+
 # Initial checks passed, start working
 # ------------------------------------
 if [ $VERILOG_MODE -eq 0 ]; then
@@ -111,6 +123,11 @@ fi
 if [ $VERILOG_MODE -eq 0 ]; then
 	echo "... extracting netlist from schematic $CELL_SCH"
 	xschem --rcfile "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc" -n -s -q --no_x --tcl 'set top_subckt 1' "$CELL_SCH" -N "$NETLIST_SCH" > /dev/null
+
+	if [ ! -f "$NETLIST_SCH" ]; then
+		echo "Error, no schematic netlist produced!"
+		exit $ERR_NO_RESULT
+	fi	
 
 	# Check if schematic netlist contains standard cells: if yes, include library with
 	# SPICE netlists for the standard cells
@@ -147,7 +164,12 @@ fi
 echo "... extracting netlist from layout $CELL_LAY"
 magic -dnull -noconsole "$EXT_SCRIPT" > /dev/null 
 
-# Now run the lvs using netgen
+if [ ! -f "$NETLIST_LAY" ]; then
+	echo "Error, no layout netlist produced!"
+	exit $ERR_NO_RESULT
+fi
+
+# Now run the LVS using netgen
 # ----------------------------
 echo "... run netgen"
 if [ $VERILOG_MODE -eq 0 ]; then
