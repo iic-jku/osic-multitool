@@ -38,22 +38,26 @@ ERR_NO_PARAM=3
 ERR_NO_VAR=4
 ERR_NO_RESULT=5
 
-if [ $# != 1 ]; then
+if [ $# != 1 ]
+then
 	echo "Usage: $0 <cellname>"
 	exit $ERR_NO_PARAM
 fi
 
-if [ -z ${PDK_ROOT+x} ]; then
+if [ -z ${PDK_ROOT+x} ]
+then
 	echo 'Variable PDK_ROOT not set!'
 	exit $ERR_NO_VAR
 fi
 
-if [ -z ${PDK+x} ]; then
+if [ -z ${PDK+x} ]
+then
 	echo 'Variable PDK not set!'
 	exit $ERR_NO_VAR
 fi
 
-if [ -z ${STD_CELL_LIBRARY+x} ]; then
+if [ -z ${STD_CELL_LIBRARY+x} ]
+then
 	echo 'Variable STD_CELL_LIBRARY not set!'
 	exit $ERR_NO_VAR
 fi
@@ -72,15 +76,19 @@ TOPCELL="$1"
 
 # Check if files exist
 # --------------------
-if [ -f "$CELL_V" ]; then
+if [ -f "$CELL_V" ]
+then
 	VERILOG_MODE=1
 else
 	VERILOG_MODE=0
-	if [ -f "$CELL_SCH" ]; then
+	if [ -f "$CELL_SCH" ]
+	then
 		export CELL_SCH="$CELL_SCH"
-	elif [ -f "sch/$CELL_SCH" ]; then
+	elif [ -f "sch/$CELL_SCH" ]
+	then
 		export CELL_SCH="sch/$CELL_SCH"
-	elif [ -f "xschem/$CELL_SCH" ]; then
+	elif [ -f "xschem/$CELL_SCH" ]
+	then
 		export CELL_SCH="xschem/$CELL_SCH"
 	else
 		echo "Schematic $CELL_SCH not found!"
@@ -88,11 +96,14 @@ else
 	fi
 fi
 
-if [ -f "$CELL_LAY" ]; then
+if [ -f "$CELL_LAY" ]
+then
 	export CELL_LAY="$CELL_LAY"
-elif [ -f "lay/$CELL_LAY" ]; then
+elif [ -f "lay/$CELL_LAY" ]
+then
 	export CELL_LAY="lay/$CELL_LAY"
-elif [ -f "mag/$CELL_LAY" ]; then
+elif [ -f "mag/$CELL_LAY" ]
+then
 	export CELL_LAY="mag/$CELL_LAY"
 else
 	echo "Layout $CELL_LAY not found!"
@@ -102,17 +113,20 @@ fi
 # Remove old netlists
 # -------------------
 
-if [ -f "$NETLIST_SCH" ]; then
+if [ -f "$NETLIST_SCH" ]
+then
 	rm -f "$NETLIST_SCH"
 fi
 
-if [ -f "$NETLIST_LAY" ]; then
+if [ -f "$NETLIST_LAY" ]
+then
 	rm -f "$NETLIST_LAY"
 fi
 
 # Initial checks passed, start working
 # ------------------------------------
-if [ $VERILOG_MODE -eq 0 ]; then
+if [ $VERILOG_MODE -eq 0 ]
+then
 	echo "Running LVS of <$CELL_LAY> vs <$CELL_SCH>."
 else
 	echo "Running LVS of <$CELL_LAY> vs <$CELL_V>."
@@ -120,18 +134,21 @@ fi
 
 # Extract SPICE netlist from schematic
 # ------------------------------------
-if [ $VERILOG_MODE -eq 0 ]; then
+if [ $VERILOG_MODE -eq 0 ]
+then
 	echo "... extracting netlist from schematic $CELL_SCH"
 	xschem --rcfile "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc" -n -s -q --no_x --tcl 'set top_subckt 1' "$CELL_SCH" -N "$NETLIST_SCH" > /dev/null
 
-	if [ ! -f "$NETLIST_SCH" ]; then
+	if [ ! -f "$NETLIST_SCH" ]
+	then
 		echo "Error, no schematic netlist produced!"
 		exit $ERR_NO_RESULT
 	fi	
 
 	# Check if schematic netlist contains standard cells: if yes, include library with
 	# SPICE netlists for the standard cells
-	if [ ! $(grep -m 1 -e "$STD_CELL_LIBRARY" "$NETLIST_SCH" > /dev/null) ]; then
+	if grep -q "$STD_CELL_LIBRARY" "$NETLIST_SCH"
+	then
         	# Remove the .end
         	sed -i '/\.end\b/d' "$NETLIST_SCH"
         	# Append sky130 lib
@@ -149,7 +166,8 @@ fi
 	echo "extract all"
 	echo "ext2spice lvs"
 } > "$EXT_SCRIPT"
-if [ $VERILOG_MODE -eq 1 ]; then
+if [ $VERILOG_MODE -eq 1 ]
+then
 	# this is needed for the LVS in netgen, because the standard cells
 	# are not instantiated in the (powered) .v file
 	echo "ext2spice subcircuit descend off"		>> "$EXT_SCRIPT"
@@ -164,7 +182,8 @@ fi
 echo "... extracting netlist from layout $CELL_LAY"
 magic -dnull -noconsole "$EXT_SCRIPT" > /dev/null 
 
-if [ ! -f "$NETLIST_LAY" ]; then
+if [ ! -f "$NETLIST_LAY" ]
+then
 	echo "Error, no layout netlist produced!"
 	exit $ERR_NO_RESULT
 fi
@@ -172,7 +191,8 @@ fi
 # Now run the LVS using netgen
 # ----------------------------
 echo "... run netgen"
-if [ $VERILOG_MODE -eq 0 ]; then
+if [ $VERILOG_MODE -eq 0 ]
+then
 	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$NETLIST_SCH $TOPCELL" \
 		"$PDK_ROOT/$PDK/libs.tech/netgen/${PDK}_setup.tcl" \
 		"$LVS_REPORT" > "$LVS_LOG"
