@@ -35,10 +35,26 @@
 # ERR_LVS_MISMATCH=1 reserved
 ERR_FILE_NOT_FOUND=2
 ERR_NO_PARAM=3
+ERR_NO_VAR=4
 
 if [ $# != 1 ]; then
 	echo "Usage: $0 <cellname>"
 	exit $ERR_NO_PARAM
+fi
+
+if [ -z ${PDK_ROOT+x} ]; then
+	echo 'Variable PDK_ROOT not set!'
+	exit $ERR_NO_VAR
+fi
+
+if [ -z ${PDK+x} ]; then
+	echo 'Variable PDK not set!'
+	exit $ERR_NO_VAR
+fi
+
+if [ -z ${STD_CELL_LIBRARY+x} ]; then
+	echo 'Variable STD_CELL_LIBRARY not set!'
+	exit $ERR_NO_VAR
 fi
 
 # Define useful variables
@@ -102,7 +118,7 @@ if [ $VERILOG_MODE -eq 0 ]; then
         	# Remove the .end
         	sed -i '/\.end\b/d' "$NETLIST_SCH"
         	# Append sky130 lib
-        	cat "$PDK_ROOT/sky130A/libs.ref/$STD_CELL_LIBRARY/spice/$STD_CELL_LIBRARY.spice" >> "$NETLIST_SCH"
+        	cat "$PDK_ROOT/$PDK/libs.ref/$STD_CELL_LIBRARY/spice/$STD_CELL_LIBRARY.spice" >> "$NETLIST_SCH"
         	# Add .end
         	echo ".end" >> "$NETLIST_SCH"
 	fi
@@ -136,14 +152,14 @@ magic -dnull -noconsole "$EXT_SCRIPT" > /dev/null
 echo "... run netgen"
 if [ $VERILOG_MODE -eq 0 ]; then
 	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$NETLIST_SCH $TOPCELL" \
-		"$PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl" \
+		"$PDK_ROOT/$PDK/libs.tech/netgen/${PDK}_setup.tcl" \
 		"$LVS_REPORT" > "$LVS_LOG"
 else
 	# this is not needed if subcircuit descend off is applied during extract
 	# UPDATE: still needed, the subcircuit descend off seems to not work
 	export MAGIC_EXT_USE_GDS=1
 	netgen -batch lvs "$NETLIST_LAY $TOPCELL" "$CELL_V $TOPCELL" \
-                "$PDK_ROOT/sky130A/libs.tech/netgen/sky130A_setup.tcl" \
+                "$PDK_ROOT/$PDK/libs.tech/netgen/${PDK}_setup.tcl" \
                 "$LVS_REPORT" > "$LVS_LOG"
 fi
 
