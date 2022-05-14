@@ -57,7 +57,9 @@ fi
 	echo 'drc count'
 	echo 'puts stdout "Error details:"'
 	echo 'puts stdout "--------------"'
+	# shellcheck disable=SC2016
 	echo 'foreach {errtype coordlist} $drc_res {'
+	# shellcheck disable=SC2016	
 	echo '  puts stdout $errtype }'
 	echo 'quit'
 } > "$EXT_SCRIPT"
@@ -65,4 +67,3 @@ fi
 # Run DRC with magic
 # ------------------
 magic -dnull -noconsole "$EXT_SCRIPT"
-
