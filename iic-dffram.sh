@@ -46,8 +46,10 @@ if [ ! -f dffram.py ]; then
 	exit $ERR_NO_DFFRAM
 fi
 
+OPENLANE_DIR=$(realpath "$OPENLANE_ROOT"/*/)
+
 if [ $# = 0 ]; then
-	./dffram.py --using-local-openlane "$OPENLANE_ROOT/*/" --pdk-root "$PDK_ROOT" --help
+	./dffram.py --using-local-openlane "$OPENLANE_DIR" --pdk-root "$PDK_ROOT" --help
 else
-	./dffram.py --using-local-openlane "$OPENLANE_ROOT/*/" --pdk-root "$PDK_ROOT" "$@"
+	./dffram.py --using-local-openlane "$OPENLANE_DIR" --pdk-root "$PDK_ROOT" "$@"
 fi
