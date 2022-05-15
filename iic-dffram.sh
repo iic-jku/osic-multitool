@@ -47,7 +47,7 @@ if [ ! -f dffram.py ]; then
 fi
 
 if [ $# = 0 ]; then
-	dffram.py --using-local-openlane "$OPENLANE_ROOT/*/" --pdk-root "$PDK_ROOT" --help
+	./dffram.py --using-local-openlane "$OPENLANE_ROOT/*/" --pdk-root "$PDK_ROOT" --help
 else
-	dffram.py --using-local-openlane "$OPENLANE_ROOT/*/" --pdk-root "$PDK_ROOT" "$@"
+	./dffram.py --using-local-openlane "$OPENLANE_ROOT/*/" --pdk-root "$PDK_ROOT" "$@"
 fi
