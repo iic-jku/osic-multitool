@@ -18,14 +18,31 @@
 # limitations under the License.
 # SPDX-License-Identifier: Apache-2.0
 #
-# Usage: iic-dffram-install.sh
+# Usage: iic-dffram-install.sh [install_dir]
 #
 # This script installs the DFFRAM package from GitHub at
 # https://github.com/AUCOHL/DFFRAM
 # ========================================================================
 
-if [ ! -d dffram ]; then
-	git clone --depth 1 https://github.com/Cloud-V/DFFRAM dffram
+ERR_PARAM=1
+
+if [ $# -gt 1 ]; then
+	echo "Usage: $0 [install_dir]"
+	echo
+	echo "If no <install_dir> is provided then <dffram> is used as default."
+	exit $ERR_PARAM
 fi
 
-cd dffram || exit
+if [ $# = 1 ]; then
+	DIR_NAME=$1
+else
+	DIR_NAME=dffram
+fi
+
+if [ ! -d "$DIR_NAME" ]; then
+	git clone --depth 1 https://github.com/Cloud-V/DFFRAM "$DIR_NAME"
+else
+	echo "Directory <$DIR_NAME> already exists."
+fi
+
+cd "$DIR_NAME" || exit
