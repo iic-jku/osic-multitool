@@ -2,7 +2,7 @@
 
 **(c) 2021-2022 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits**
 
-This repo contains various tools and examples for **Open-Source IC (OSIC) Design**. At this point only the open-source PDK [SKY130](https://github.com/google/skywater-pdk) from **SkyWater Technologies** and **Google** is supported.
+This repo contains various tools and examples for **Open-Source IC (OSIC) Design**. At this point, only the open-source PDK [SKY130](https://github.com/google/skywater-pdk) from **SkyWater Technologies** and **Google** is supported.
 
 This flow is using for the digital components
 * [OpenLane/OpenROAD](https://github.com/The-OpenROAD-Project/OpenLane) for the digital RTL2GDS flow,
@@ -22,9 +22,9 @@ For `GDS` file viewing and manipulation [KLayout](https://www.klayout.de) is use
 
 ## Initialization of SKY130 PDK and tools
 
-Use `iic-osic-setup.sh` to setup or update a complete analog/digital IC design environment in Ubuntu/Xubuntu. Please see the (documented) script for usage and the installed tools.
+Use `iic-osic-setup.sh` to set up or update a complete analog/digital IC design environment in Ubuntu/Xubuntu. Please see the (documented) script for usage and the installed tools.
 
-The setup script creates also an initialization script in the user's home directory. Use it to setup the environment by running
+The setup script creates also an initialization script in the user's home directory. Use it to set up the environment by running
 
 ```shell
 source ./iic-init.sh
@@ -34,7 +34,7 @@ source ./iic-init.sh
 
 Instructions for the setup of the efabless.com Caravel SoC harness can be found at https://github.com/efabless/caravel_user_project/blob/main/docs/source/roundtrip.rst.
 
-In the directory `caravel_setup` a script can be found to setup the environment variables as needed with: 
+In the directory `caravel_setup` a script can be found to set up the environment variables as needed with: 
 
 ```shell
 source ./iic-init-caravel.sh
@@ -48,7 +48,7 @@ A fully-automatic LVS script is prepared. Run the LVS by using
 ./iic-lvs.sh cellname
 ```
 
-where `cellname` is the name of the schematic/verilog and layout cell. For further documentation and usage of this script please look into the file.
+where `cellname` is the name of the schematic/Verilog and layout cell. For further documentation and usage of this script please look into the file.
 
 ## DRC script
 
@@ -76,7 +76,7 @@ The resulting `SPICE` netlist including parasitic wiring components is called `c
 
 ## Cleanup of temporary files
 
-The various temporary and results files and outputs can be easily removed from a directory by running
+The various temporary and result files and outputs can be easily removed from a directory by running
 
 ```shell
 ./iic-clean.sh
@@ -99,10 +99,10 @@ On my Unix machine, the time to simulation (`ngspice` start to actual simulation
 original SPICE model files from the SKY130A PDK created by [open_pdks](https://github.com/RTimothyEdwards/open_pdks).
 Using this model file reducer, the ngspice startup is improved to 5sec!
 
-This script can also be used to check the original model file, as it reports warnings when include files
-are not found.
+This script can also be used to check the original model file, as it reports warnings when included files are not found.
 
 Usage:
+
 ```shell
 ./iic-spice-model-red.py input_file [section]
 ```
@@ -111,13 +111,30 @@ It reads the `input_file` and writes an output file called `input_file.<section>
 the script displays a help screen.
 
 Exemplary use on the SKY130A model file:
+
 ```shell
 ./iic-spice-model-red.py sky130.lib.spice tt
 ```
 
+## DFFRAM support scripts
+
+Two scripts support the usage of [DFFRAM](https://github.com/AUCOHL/DFFRAM), especially when used with the [IIC-OSIC-TOOLS](https://github.com/hpretl/iic-osic-tools).
+
+With `iic-dffram-install.sh [install_dir]` the DFFRAM GitHub repository is cloned into `install_dir` (if this optional parameter is not provided then the default `dffram` is used).
+
+Using `iic-dffram.sh [parameter list]` provides a wrapper script to set a few parameters correctly (running `iic-dffram.sh` without parameters displays the help screen).
+
+Here is an example for creating a 32b-wide RAM with 32 entries:
+
+```shell
+iic-dffram-install.sh test1
+cd test1
+iic-dffram.sh -s 32x32
+```
+
 ## Verilog to schematic/symbol conversion
 
-The script `iic-v2sch.awk` is a link to Stefan Schippers' conversion script `make_sky130_sch_from_verilog.awk`, see [xschem_sky130](https://github.com/StefanSchippers/xschem_sky130). It creates a symbol and schematic view for `xschem` from a Powered-Verilog file. The schematic can be used to run a transistor-level simulation of a Verilog design, or to run an LVS on transistor-level of a synthesized digital design.
+The script `iic-v2sch.awk` is a link to Stefan Schippers' conversion script `make_sky130_sch_from_verilog.awk`, see [xschem_sky130](https://github.com/StefanSchippers/xschem_sky130). It creates a symbol and schematic view for `xschem` from a Powered-Verilog file. The schematic can be used to run a transistor-level simulation of a Verilog design or to run an LVS on the transistor level of a synthesized digital design.
 
 Usage:
 ```shell
@@ -128,6 +145,6 @@ The `input_file` is the Powered-Verilog `.v` file. The symbol `input_file.sym` a
 
 ## Todo and Known Bugs
 
-* SPICE model file reducer: Add better control of output during run, maybe add a `--verbose` switch.
-* Inductor/trafo flow: (Semi)automatic generation of inductor and trafo layout, extraction of a SPICE model, adaption and support in LVS and PEX
-* A (simple) GUI to setup and run verification campaigns (like DRC, LVS, PEX on a number of cells, with summarized run status)? Not sure about that, as open-source tooling is generally script-heavy and GUI-light.
+* SPICE model file reducer: Add better control of output during a run, maybe add a `--verbose` switch.
+* Inductor/trafo flow: (Semi)automatic generation of an inductor and trafo layout, extraction of a SPICE model, adaption and support in LVS and PEX
+* A (simple) GUI to set up and run verification campaigns (like DRC, LVS, PEX on a number of cells, with summarized run status)? Not sure about that, as open-source tooling is generally script-heavy and GUI-light.
