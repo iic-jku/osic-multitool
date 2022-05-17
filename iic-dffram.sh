@@ -51,5 +51,5 @@ OPENLANE_DIR=$(realpath "$OPENLANE_ROOT"/*/)
 if [ $# = 0 ]; then
 	./dffram.py --using-local-openlane "$OPENLANE_DIR" --pdk-root "$PDK_ROOT" --help
 else
-	./dffram.py --using-local-openlane "$OPENLANE_DIR" --pdk-root "$PDK_ROOT" "$@"
+	./dffram.py -j "$(nproc)" --using-local-openlane "$OPENLANE_DIR" --pdk-root "$PDK_ROOT" "$@"
 fi
