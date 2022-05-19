@@ -132,6 +132,16 @@ cd test1
 iic-dffram.sh -s 32x32
 ```
 
+## GDS3D viewer
+
+The wrapper script `gds3d.sh` is provided to simplify the usage of [GDS3D](https://github.com/trilomix/GDS3D), which is part of the [IIC-OSIC-TOOLS](https://github.com/hpretl/iic-osic-tools) collection.
+
+Usage for 3D-viewing a GDS layout in SKY130 technology (`gds3d.sh -h` shows available options):
+
+```shell
+gds3d.sh -i file.gds
+```
+
 ## Verilog to schematic/symbol conversion
 
 The script `iic-v2sch.awk` is a link to Stefan Schippers' conversion script `make_sky130_sch_from_verilog.awk`, see [xschem_sky130](https://github.com/StefanSchippers/xschem_sky130). It creates a symbol and schematic view for `xschem` from a Powered-Verilog file. The schematic can be used to run a transistor-level simulation of a Verilog design or to run an LVS on the transistor level of a synthesized digital design.
