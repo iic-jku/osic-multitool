@@ -19,4 +19,10 @@
 # SPDX-License-Identifier: Apache-2.0
 # ========================================================================
 
-GDS3D -p "$PDKPATH/libs.tech/gds3d/gds3d_tech.txt" "$@"
+if [ $# = 1 ]; then
+    GDS3D -p "$PDKPATH/libs.tech/gds3d/gds3d_tech.txt" -i "$1"
+elif [ $# = 0 ]; then
+    GDS3D -h
+else
+    GDS3D -p "$PDKPATH/libs.tech/gds3d/gds3d_tech.txt" "$@"
+fi
