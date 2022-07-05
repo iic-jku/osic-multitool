@@ -20,7 +20,7 @@
 #
 # Usage: iic-dffram.sh [parameter list]
 #
-# This script installs the DFFRAM package from GitHub at
+# This script provides a wrapper for the DFFRAM package from GitHub at
 # https://github.com/AUCOHL/DFFRAM
 # ========================================================================
 
