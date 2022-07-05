@@ -4,7 +4,7 @@
 
 This repo contains various tools and examples for **Open-Source IC (OSIC) Design**. At this point, only the open-source PDK [SKY130](https://github.com/google/skywater-pdk) from **SkyWater Technologies** and **Google** is supported.
 
-This flow is using for the digital components
+This flow is used for the digital components
 * [OpenLane/OpenROAD](https://github.com/The-OpenROAD-Project/OpenLane) for the digital RTL2GDS flow,
 * [Icarus Verilog](http://iverilog.icarus.com) and [Verilator](https://www.veripool.org/verilator/) for linting and digital simulation, and
 * [GTKWave](http://gtkwave.sourceforge.net) for digital waveform viewing.
@@ -88,7 +88,7 @@ In the folder `magic-cheatsheet` you can find a summary of important macros, key
 
 ## Example analog and digital designs
 
-In the folder `example` an analog design example (an inverter in subfolder `example/ana`) and a simple digital design example (a counter in subfolder `example/dig`) are prepared for testing the environment. In the folder `example/dig/rtl` the result of the digital flow `OpenLane` is presented, as a powered Verilog file and a layout view.
+In the folder `example`, an analog design example (an inverter in subfolder `example/ana`) and a simple digital design example (a counter in subfolder `example/dig`) are prepared for testing the environment. In the folder `example/dig/rtl` the result of the digital flow `OpenLane` is presented, as a powered Verilog file and a layout view.
 
 ## SPICE model file reducer
 
@@ -142,6 +142,22 @@ Usage for 3D-viewing a GDS layout in SKY130 technology (`gds3d.sh -h` shows avai
 gds3d.sh -i file.gds
 ```
 
+## CHIP_ART support scripts
+
+Two scripts support the usage of [CHIP_ART](https://github.com/jazvw/chip_art.git), especially when used with the [IIC-OSIC-TOOLS](https://github.com/hpretl/iic-osic-tools).
+
+With `iic-chipart-install.sh [install_dir]` the CHIP_ART GitHub repository is cloned into `install_dir` (if this optional parameter is not provided then the default `chip_art` is used).
+
+Using `iic-chipart.sh [parameter list]` provides a wrapper script to set a few parameters correctly (running `iic-chipart.sh` without parameters displays the help screen).
+
+Here is an example for creating a GDS from the provided example (`chip_art.png`):
+
+```shell
+iic-chipart-install.sh test1
+cd test1
+iic-chipart.sh chip_art.png 50
+```
+
 ## Verilog to schematic/symbol conversion
 
 The script `iic-v2sch.awk` is a link to Stefan Schippers' conversion script `make_sky130_sch_from_verilog.awk`, see [xschem_sky130](https://github.com/StefanSchippers/xschem_sky130). It creates a symbol and schematic view for `xschem` from a Powered-Verilog file. The schematic can be used to run a transistor-level simulation of a Verilog design or to run an LVS on the transistor level of a synthesized digital design.
@@ -157,4 +173,4 @@ The `input_file` is the Powered-Verilog `.v` file. The symbol `input_file.sym` a
 
 * SPICE model file reducer: Add better control of output during a run, maybe add a `--verbose` switch.
 * Inductor/trafo flow: (Semi)automatic generation of an inductor and trafo layout, extraction of a SPICE model, adaption and support in LVS and PEX
-* A (simple) GUI to set up and run verification campaigns (like DRC, LVS, PEX on a number of cells, with summarized run status)? Not sure about that, as open-source tooling is generally script-heavy and GUI-light.
+* A (simple) GUI to set up and run verification campaigns (like DRC, LVS, PEX on several cells, with summarized run status)? Not sure about that, as open-source tooling is generally script-heavy and GUI-light.
