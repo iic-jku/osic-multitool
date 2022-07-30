@@ -63,7 +63,7 @@ sudo apt -qq upgrade -y
 echo ">>>> Installing required (and useful) packages via APT"
 # FIXME ngspice installed separately, as APT version in LTS is too old
 sudo apt -qq install -y docker.io git klayout iverilog gtkwave ghdl \
-	verilator yosys xdot python3 python3-pip \
+	verilator yosys xdot python3 python3-pip python3.10-venv \
 	build-essential automake autoconf gawk m4 flex bison \
 	octave octave-signal octave-communications octave-control \
 	xterm csh tcsh htop mc gedit vim vim-gtk3 kdiff3 \
