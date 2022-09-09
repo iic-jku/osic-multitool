@@ -137,7 +137,8 @@ fi
 if [ $VERILOG_MODE -eq 0 ]
 then
 	echo "... extracting netlist from schematic $CELL_SCH"
-	xschem --rcfile "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc" -n -s -q --no_x --tcl 'set top_subckt 1' "$CELL_SCH" -N "$NETLIST_SCH" > /dev/null
+	XSCHEMTCL='set top_subckt 1; set netlist_dir .'
+	xschem --rcfile "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc" -n -s -q --no_x --tcl "$XSCHEMTCL" "$CELL_SCH" -N "$NETLIST_SCH" > /dev/null
 
 	if [ ! -f "$NETLIST_SCH" ]
 	then
