@@ -1,15 +1,17 @@
 # IIC-OSIC Tools
 
-**(c) 2021-2022 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits**
+## (c) 2021-2022 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits
 
 This repo contains various tools and examples for **Open-Source IC (OSIC) Design**. At this point, only the open-source PDK [SKY130](https://github.com/google/skywater-pdk) from **SkyWater Technologies** and **Google** is supported.
 
-This flow is used for the digital components
+This flow is used for the digital components:
+
 * [OpenLane/OpenROAD](https://github.com/The-OpenROAD-Project/OpenLane) for the digital RTL2GDS flow,
 * [Icarus Verilog](http://iverilog.icarus.com) and [Verilator](https://www.veripool.org/verilator/) for linting and digital simulation, and
 * [GTKWave](http://gtkwave.sourceforge.net) for digital waveform viewing.
 
-The analog/full custom components are using
+The analog/full custom components are using:
+
 * [Xschem](https://github.com/StefanSchippers/xschem) for schematic capture,
 * [ngspice](http://ngspice.sourceforge.net) for simulation,
 * [gaw3](https://github.com/StefanSchippers/xschem-gaw) for analog waveform viewing,
@@ -32,9 +34,9 @@ source ./iic-init.sh
 
 ## Initialization of efabless.com Caravel SoC harness
 
-Instructions for the setup of the efabless.com Caravel SoC harness can be found at https://github.com/efabless/caravel_user_project/blob/main/docs/source/roundtrip.rst.
+Instructions for the setup of the efabless.com Caravel SoC harness can be found at <https://github.com/efabless/caravel_user_project/blob/main/docs/source/roundtrip.rst>.
 
-In the directory `caravel_setup` a script can be found to set up the environment variables as needed with: 
+In the directory `caravel_setup` a script can be found to set up the environment variables as needed with:
 
 ```shell
 source ./iic-init-caravel.sh
@@ -42,7 +44,7 @@ source ./iic-init-caravel.sh
 
 ## LVS script
 
-A fully-automatic LVS script is prepared. Run the LVS by using 
+A fully-automatic LVS script is prepared. Run the LVS by using
 
 ```shell
 ./iic-lvs.sh cellname
@@ -52,19 +54,19 @@ where `cellname` is the name of the schematic/Verilog and layout cell. For furth
 
 ## DRC script
 
-A fully-automatic DRC script is prepared. Run the DRC by using 
+A fully-automatic DRC script is prepared. Run the DRC by using
 
 ```shell
 ./iic-drc.sh cellname
 ```
 
-where `cellname` is the name of the layout cell `cellname.mag`. 
+where `cellname` is the name of the layout cell `cellname.mag`.
 
 _Note that this DRC can show additional errors compared to the (fast) DRC during layout generation, as this DRC runs in CIF/GDS mode!_
 
 ## PEX script
 
-A fully-automatic PEX script for parasitic extraction is prepared. Run the PEX by using 
+A fully-automatic PEX script for parasitic extraction is prepared. Run the PEX by using
 
 ```shell
 ./iic-pex.sh cellname [mode]
@@ -97,7 +99,7 @@ specified model corner (default is `tt`). It further produces a flat single mode
 
 On my Unix machine, the time to simulation (`ngspice` start to actual simulation start) is 80sec using the
 original SPICE model files from the SKY130A PDK created by [open_pdks](https://github.com/RTimothyEdwards/open_pdks).
-Using this model file reducer, the ngspice startup is improved to 5sec!
+Using this model file reducer, the `ngspice` startup is improved to 5sec!
 
 This script can also be used to check the original model file, as it reports warnings when included files are not found.
 
@@ -124,7 +126,7 @@ With `iic-dffram-install.sh [install_dir]` the DFFRAM GitHub repository is clone
 
 Using `iic-dffram.sh [parameter list]` provides a wrapper script to set a few parameters correctly (running `iic-dffram.sh` without parameters displays the help screen).
 
-Here is an example for creating a 32b-wide RAM with 32 entries:
+Here is an example of creating a 32b-wide RAM with 32 entries:
 
 ```shell
 iic-dffram-install.sh test1
@@ -150,7 +152,7 @@ With `iic-chipart-install.sh [install_dir]` the CHIP_ART GitHub repository is cl
 
 Using `iic-chipart.sh [parameter list]` provides a wrapper script to set a few parameters correctly (running `iic-chipart.sh` without parameters displays the help screen).
 
-Here is an example for creating a GDS from the provided example (`chip_art.png`):
+Here is an example of creating a GDS from the provided example (`chip_art.png`):
 
 ```shell
 iic-chipart-install.sh test1
@@ -163,14 +165,25 @@ iic-chipart.sh chip_art.png 50
 The script `iic-v2sch.awk` is a link to Stefan Schippers' conversion script `make_sky130_sch_from_verilog.awk`, see [xschem_sky130](https://github.com/StefanSchippers/xschem_sky130). It creates a symbol and schematic view for `xschem` from a Powered-Verilog file. The schematic can be used to run a transistor-level simulation of a Verilog design or to run an LVS on the transistor level of a synthesized digital design.
 
 Usage:
+
 ```shell
 ./iic-v2sch.awk input_file.v
 ```
 
-The `input_file` is the Powered-Verilog `.v` file. The symbol `input_file.sym` and the corresponding schematic `input_file.sch` are then created.
+The `input_file` is the Powered-Verilog `.v` file. The symbol `input_file.sym` and the corresponding schematic `input_file`.sch` is then created.
+
+## Verilog linting
+
+The script `iic-vlint.sh` is created to support the linting of Verilog files using `Icarus Verilog` and `Verilator`. Executing `iic-vlint.sh` without input parameters brings up a help screen.
+
+Usage:
+
+```shell
+./iic-vlint.sh input_file.v
+```
 
 ## Todo and Known Bugs
 
 * SPICE model file reducer: Add better control of output during a run, maybe add a `--verbose` switch.
 * Inductor/trafo flow: (Semi)automatic generation of an inductor and trafo layout, extraction of a SPICE model, adaption and support in LVS and PEX
-* A (simple) GUI to set up and run verification campaigns (like DRC, LVS, PEX on several cells, with summarized run status)? Not sure about that, as open-source tooling is generally script-heavy and GUI-light.
+* A (simple) GUI to set up and run verification campaigns (like DRC, LVS, and PEX on several cells, with summarized run status)? Not sure about that, as open-source tooling is generally script-heavy and GUI-light.
