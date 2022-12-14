@@ -54,13 +54,13 @@ where `cellname` is the name of the schematic/Verilog and layout cell. For furth
 
 ## DRC script
 
-A fully-automatic DRC script is prepared, which can either use `magic` or `klayout`. Run the DRC by using
+A fully-automatic DRC script is prepared, which can either use `magic` or `klayout` or both. Run the DRC by using
 
 ```shell
-./iic-drc.sh [-m|-k] cellname
+./iic-drc.sh [-m|-k|-b|-c] cellname
 ```
 
-where `cellname` is the name of the layout cell. If `-m` is specified, then the `magic` DRC check is run (default); if `-k` is specified, then the `klayout` DRC check is run. 
+where `cellname` is the name of the layout cell. If `-m` is specified, then the `magic` DRC check is run (default); if `-k` is specified, then the `klayout` DRC check is run; if `-b` is selected then both `magic` and `klayout` are run. You can clean result files by running `./iic-drc.sh -c`.
 
 _Note that the `klayout` DRC check is used by efabless for the tape-out check! The DRC style used in `magic` is `drc(full)` with euclidean turned on, which is the most suited DRC check._
 
