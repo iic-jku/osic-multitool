@@ -84,6 +84,14 @@ The various temporary and result files and outputs can be easily removed from a 
 ./iic-clean.sh
 ```
 
+## Conversion of Verilog to SVG schematic
+
+A combination of `yosys` and `netlistsvg` (both tools are available in `IIC-OSIC-TOOLS` a Verilog design can be visualized as a netlist. In order to ease the use, the script `iic-v2svg.sh` is available. Specify an input Verilog file (`input.v`) and get an SVG file (`output.svg`) using
+
+```shell
+./iic-v2svg.sh input.v output.svg
+```
+
 ## Cheatsheet for Magic
 
 In the folder `magic-cheatsheet` you can find a summary of important macros, keybindings, and mouse button operations for `Magic`, relating to version 8.3.
