@@ -2,8 +2,8 @@
 # ========================================================================
 # GDS3D wrapper script
 #
-# SPDX-FileCopyrightText: 2022 Georg Zachl, Johannes Kepler 
-# University, Institute for Integrated Circuits
+# SPDX-FileCopyrightText: 2022 Georg Zachl
+# Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.

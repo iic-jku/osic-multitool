@@ -2,8 +2,8 @@
 # ========================================================================
 # Cleanup of temporary files
 #
-# SPDX-FileCopyrightText: 2021-2022 Harald Pretl, Johannes Kepler 
-# University, Institute for Integrated Circuits
+# SPDX-FileCopyrightText: 2021-2023 Harald Pretl
+# Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 # SPDX-License-Identifier: Apache-2.0
 # ========================================================================
 
-echo "Cleaning up files (hierarchically)."
+echo "[INFO] Cleaning up files (hierarchically)."
 
 rm -rf ./*.spc
 rm -rf ./*.ext
