@@ -2,8 +2,8 @@
 # ========================================================================
 # Verilog Linting helper script
 #
-# SPDX-FileCopyrightText: 2022 Harald Pretl, Johannes Kepler 
-# University, Institute for Integrated Circuits
+# SPDX-FileCopyrightText: 2022-2023 Harald Pretl
+# Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,13 +33,14 @@ ERR_PROG_NOT_AVAILABLE=4
 
 if [ $# = 0 ]; then
 	echo
-	echo "Verilog linting using Icarus Verilog and Verilator"
+	echo "Verilog linting using Icarus Verilog and Verilator (IIC@JKU)"
 	echo
-	echo "Usage: $0 [-i|-v|-b] [-g1995|-g2001|-g2005|-g2005-sv|-g2009|-g2012] <file.v>"
+	echo "Usage: $0 [-d] [-i|-v|-b] [-g1995|-g2001|-g2005|-g2005-sv|-g2009|-g2012] <file.v>"
 	echo "       -i Run <iverilog>"
 	echo "       -v Runs <verilator>"
 	echo "       -b Run <iverilog> followed by <verilator> (default)"
 	echo "       -g VERSION Sets the Verilog standard for <iverilog> (default 2005)"
+	echo "       -d Enable debug information"
 	echo
 	exit $ERR_NO_PARAM
 fi
@@ -58,26 +59,26 @@ DEBUG=0
 while getopts "ivbg:d" flag; do
 	case $flag in
 		i)
-			#echo "-i set"
+			[ $DEBUG = 1 ] && echo "[INFO] flag -i is set"
 			RUN_ICARUS=1
 			RUN_VERILATOR=0
 			;;
 		v)
-			#echo "-v set"
+			[ $DEBUG = 1 ] && echo "[INFO] flag -v is set"
 			RUN_VERILATOR=1
 			RUN_ICARUS=0
 			;;
 		b)
-			#echo "-b set"
+			[ $DEBUG = 1 ] && echo "[INFO] flag -b is set"
 			RUN_ICARUS=1
 			RUN_VERILATOR=1
 			;;
 		g)
-			#echo "-g set"
+			[ $DEBUG = 1 ] && echo "[INFO] flag -g is set"
 			VERILOG_VERSION=${OPTARG}
 			;;
 		d)
-			#echo "DEBUG set"
+			echo "[INFO] DEBUG is enabled"
 			DEBUG=1
 			;;
 		*)
@@ -89,16 +90,16 @@ shift $((OPTIND-1))
 FILE_NAME=$1
 
 if [ $DEBUG = 1 ]; then
-	echo "RUN_ICARUS=$RUN_ICARUS"
-	echo "RUN_VERILATOR=$RUN_VERILATOR"
-	echo "VERILOG_VERSION=$VERILOG_VERSION"
-	echo "FILE_NAME=$FILE_NAME"
+	echo "[INFO] RUN_ICARUS=$RUN_ICARUS"
+	echo "[INFO] RUN_VERILATOR=$RUN_VERILATOR"
+	echo "[INFO] VERILOG_VERSION=$VERILOG_VERSION"
+	echo "[INFO] FILE_NAME=$FILE_NAME"
 fi
 
 # Check if the input file exists
 # ------------------------------
 if [ ! -f "$FILE_NAME" ]; then
-	echo "ERROR: File $FILE_NAME not found!"
+	echo "[ERROR] File $FILE_NAME not found!"
     exit $ERR_FILE_NOT_FOUND
 fi
 
@@ -107,22 +108,22 @@ fi
 
 if [ $RUN_ICARUS = 1 ]; then
 	if [ -x "$(command -v iverilog)" ]; then
-		echo "RUN iverilog linting on $FILE_NAME..."
+		echo "[INFO] Run iverilog linting on $FILE_NAME..."
 		iverilog -g"$VERILOG_VERSION" -tnull "$FILE_NAME"
 	else
-		echo "ERROR: iverilog not available!"
+		echo "[ERROR] iverilog not available!"
 		exit $ERR_PROG_NOT_AVAILABLE
 	fi
 fi
 
 if [ $RUN_VERILATOR = 1 ]; then
 	if [ -x "$(command -v verilator)" ]; then
-		echo "RUN verilator linting on $FILE_NAME..."
+		echo "[INFO] Run verilator linting on $FILE_NAME..."
 		verilator --lint-only -Wall "$FILE_NAME"
 	else
-		echo "ERROR: verilator not available!"
+		echo "[ERROR] verilator not available!"
 		exit $ERR_PROG_NOT_AVAILABLE
 	fi
 fi
 
-echo "... done, bye!"
+echo "[DONE] Bye!"
