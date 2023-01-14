@@ -1,5 +1,5 @@
 # Useful bindkeys for Magic VLSI
-# (c) 2021-2022 Harald Pretl
+# (c) 2021-2023 Harald Pretl
 # Institute for Integrated Circuits, Johannes Kepler University Linz
 
 macro 0 "see no * ; see locali ; see mcon"
@@ -27,3 +27,8 @@ macro K "magic::unmeasure"
 macro q "magic::gencell {} ; raise .params"
 macro y "drc check ; drc why"
 macro ? "select area ; what"
+
+# zoom and center on cursor using Mouse scrollwheel
+
+macro Button4 "center; zoom 0.70711"
+macro Button5 "center; zoom 1.41421"
