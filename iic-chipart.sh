@@ -2,8 +2,8 @@
 # ========================================================================
 # CHIP_ART Usage Script (optimized for IIC-OSIC-TOOLS)
 #
-# SPDX-FileCopyrightText: 2022 Harald Pretl, Johannes Kepler 
-# University, Institute for Integrated Circuits
+# SPDX-FileCopyrightText: 2022-2023 Harald Pretl
+# Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -31,31 +31,38 @@ ERR_NO_INPUTFILE=3
 export NO_CHECK_INSTALL=1
 
 if [ -z ${PDK_ROOT+x} ]; then
-	echo 'Environment variable PDK_ROOT not set!'
+	echo "[ERROR] Environment variable PDK_ROOT not set!"
 	exit $ERR_NO_VAR
 fi
 
 if [ -z ${OPENLANE_ROOT+x} ]; then
-	echo 'Environment variable OPENLANE_ROOT not set!'
+	echo "[ERROR] Environment variable OPENLANE_ROOT not set!"
 	exit $ERR_NO_VAR
 fi
 
 if [ ! -f chip_art.py ]; then
-	echo 'Script needs to be started in CHIP_ART directory!'
+	echo "[ERROR] Script needs to be started in CHIP_ART directory!"
 	echo
-	echo "You can install CHIP_ART using <iic-chipart-install.sh>."
+	echo "[INFO] You can install CHIP_ART using <iic-chipart-install.sh>."
 	exit $ERR_NO_CHIPART
 fi
 
 if [ $# = 0 ]; then
+	echo
+	echo "Chipart wrapper script (IIC@JKU)"
+	echo
 	echo "Usage: $0 <image> <width>"
-	echo ""
-	echo "<image> = name of graphics file"
-	echo "<width> = width of generated GDS logo in microns"
+	echo
+	echo "       <image> = name of graphics file"
+	echo "       <width> = width of generated GDS logo in microns"
+	echo
+	exit $ERR_NO_VAR
 else
 	if [ ! -f "$1" ]; then
-		echo "File $1 not found!"
+		echo "[ERROR] File $1 not found!"
 		exit $ERR_NO_INPUTFILE
 	fi
 	make clean && make GDS_WIDTH="$2" IMAGE="$1"
 fi
+
+echo "[DONE] Chipart conversion done, bye!"

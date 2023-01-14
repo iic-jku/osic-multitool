@@ -2,8 +2,8 @@
 # ========================================================================
 # DFFRAM Usage Script (optimized for IIC-OSIC-TOOLS)
 #
-# SPDX-FileCopyrightText: 2022 Harald Pretl, Johannes Kepler 
-# University, Institute for Integrated Circuits
+# SPDX-FileCopyrightText: 2022-2023 Harald Pretl
+# Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,19 +30,19 @@ ERR_NO_DFFRAM=2
 export NO_CHECK_INSTALL=1
 
 if [ -z ${PDK_ROOT+x} ]; then
-	echo 'Environment variable PDK_ROOT not set!'
+	echo "[ERROR] Environment variable PDK_ROOT not set!"
 	exit $ERR_NO_VAR
 fi
 
 if [ -z ${OPENLANE_ROOT+x} ]; then
-	echo 'Environment variable OPENLANE_ROOT not set!'
+	echo "[ERROR] Environment variable OPENLANE_ROOT not set!"
 	exit $ERR_NO_VAR
 fi
 
 if [ ! -f dffram.py ]; then
-	echo 'Script needs to be started in DFFRAM directory!'
+	echo "[ERROR] Script needs to be started in DFFRAM directory!"
 	echo
-	echo "You can install DFFRAM using <iic-dffram-install.sh>."
+	echo "[INFO] You can install DFFRAM using <iic-dffram-install.sh>."
 	exit $ERR_NO_DFFRAM
 fi
 
@@ -53,3 +53,5 @@ if [ $# = 0 ]; then
 else
 	./dffram.py -j "$(nproc)" --using-local-openlane "$OPENLANE_DIR" --pdk-root "$PDK_ROOT" "$@"
 fi
+
+echo "[DONE] DFFRAM generated, bye!"

@@ -2,8 +2,8 @@
 # ========================================================================
 # SKY130 DRC (Design Rule Check)
 #
-# SPDX-FileCopyrightText: 2021-2022 Harald Pretl, Johannes Kepler 
-# University, Institute for Integrated Circuits
+# SPDX-FileCopyrightText: 2021-2023 Harald Pretl
+# Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -33,7 +33,7 @@ ERR_PDK_NOT_SUPPORTED=6
 
 if [ $# = 0 ]; then
 	echo
-	echo "IIC@JKU DRC script for Magic-VLSI and KLayout"
+	echo "DRC script for Magic-VLSI and KLayout (IIC@JKU)"
 	echo
 	echo "Usage: $0 [-d] [-m|-k|-b|-c] <cellname>"
 	echo "       -m Run Magic DRC (default)"
@@ -151,7 +151,7 @@ fi
 # ----------------
 
 if [ $RUN_MAGIC = 1 ]; then
-	echo "Launching Magic DRC..."
+	echo "[INFO] Launching Magic DRC..."
 
 	# remove old result files
 	rm -f "$CELL_LAY.magic.drc.rpt"
@@ -235,7 +235,7 @@ fi
 # ------------------
 
 if [ $RUN_KLAYOUT = 1 ]; then
-	echo "Launching KLayout DRC..."
+	echo "[INFO] Launching KLayout DRC..."
 
 	# remove old result files
 	rm -f "$CELL_LAY".klayout.*.xml
@@ -358,3 +358,5 @@ else
 		echo "---"
 		exit $ERR_DRC
 fi
+
+echo "[DONE] Bye!"

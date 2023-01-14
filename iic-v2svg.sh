@@ -2,8 +2,8 @@
 # ========================================================================
 # Verilog-to-SVG conversion script using Yosys and netlistsvg
 #
-# SPDX-FileCopyrightText: 2022 Harald Pretl, Johannes Kepler 
-# University, Institute for Integrated Circuits
+# SPDX-FileCopyrightText: 2022-2023 Harald Pretl
+# Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ ERR_FILE_NOT_FOUND=3
 
 if [ $# != 2 ]; then
 	echo
-	echo "IIC@JKU Verilog-to-SVG conversion script using Yosys and netlistsvg"
+	echo "Verilog-to-SVG conversion script using Yosys and netlistsvg (IIC@JKU)"
 	echo
 	echo "Usage: $0 <input.v> <output.svg>"
 	echo
@@ -75,4 +75,4 @@ netlistsvg "/tmp/$1.tmp" -o "$2"
 rm -f "/tmp/$1.cmd"
 rm -f "/tmp/$1.tmp"
 
-echo "... done, bye!"
+echo "[DONE] Bye!"

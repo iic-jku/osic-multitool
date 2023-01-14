@@ -2,8 +2,8 @@
 # ========================================================================
 # SKY130 PEX (Parasitic Extraction)
 #
-# SPDX-FileCopyrightText: 2021-2022 Harald Pretl, Johannes Kepler 
-# University, Institute for Integrated Circuits
+# SPDX-FileCopyrightText: 2021-2022 Harald Pretl
+# Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ ERR_FILE_NOT_FOUND=2
 ERR_NO_PARAM=3
 ERR_WRONG_MODE=4
 
-# Check for number of correct arguments
+# Check for the number of correct arguments
 if [ $# -eq 1 ]; then
 	# default extraction mode
 	EXT_MODE=2;
@@ -43,19 +43,19 @@ else
 		EXT_MODE=$2
 	else
 		echo "Usage: $0 <cellname> [mode]"
-		echo ""
+		echo
 		echo "       PEX mode=1 C-decoupled"
 		echo "       PEX mode=2 C-coupled (default)"
 		echo "       PEX mode=3 full-RC"
-        	exit $ERR_NO_PARAM
+        exit $ERR_NO_PARAM
 	fi
 fi
 
-# Check that mode is an integer and in valid range
+# Check that mode is an integer and in a valid range
 if [ -n "$EXT_MODE" ] && [ "$EXT_MODE" -eq "$EXT_MODE" ] 2>/dev/null; then
 	if [ "$EXT_MODE" -lt 1 ] || [ "$EXT_MODE" -gt 3 ]; then
-        	echo "Error: Unknown extraction mode!"
-        	exit $ERR_WRONG_MODE
+        echo "Error: Unknown extraction mode!"
+        exit $ERR_WRONG_MODE
 	fi
 else
         echo "Error: Extraction mode must be an integer!"
@@ -71,8 +71,8 @@ NETLIST_PEX="$1.pex.spice"
 TOPCELL="$1"
 
 
-# Check if file exists
-# --------------------
+# Check if the file exists
+# ------------------------
 if [ ! -f "$CELL_LAY" ]; then
 	echo "Layout $CELL_LAY not found!"
 	exit $ERR_FILE_NOT_FOUND
