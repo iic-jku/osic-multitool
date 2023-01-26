@@ -28,7 +28,10 @@ macro q "magic::gencell {} ; raise .params"
 macro y "drc check ; drc why"
 macro ? "select area ; what"
 
-# zoom and center on cursor using Mouse scrollwheel
+# zoom on cursor using Mouse scrollwheel, and up/down scroll with
+# CTRL-scrollwheel (SHFT-scrollwheel moves left/right)
 
-macro Button4 "center; zoom 0.70711"
-macro Button5 "center; zoom 1.41421"
+macro Button4 "zoom 0.70711"
+macro Button5 "zoom 1.41421"
+macro Control_XK_Pointer_Button4 "scroll u .05 w"
+macro Control_XK_Pointer_Button5 "scroll d .05 w"
