@@ -41,7 +41,7 @@ if [ $# = 0 ]; then
 	echo
 	echo "Usage: $0 [-d] [-m mode] [-s mode] <cellname>"
 	echo
-	echo "       -m Select PEX mode (1 = C-decoupled, 2 = C-coupled [default], 3 = full-RX)"
+	echo "       -m Select PEX mode (1 = C-decoupled, 2 = C-coupled [default], 3 = full-RC)"
 	echo "       -s Subcircuit definition in PEX netlist (1 = include subcircuit definition [default], 0 = no subcircuit)"
 	echo "       -d Enable debug information"
 	echo
