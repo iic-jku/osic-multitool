@@ -145,7 +145,9 @@ fi
 if [ $VERILOG_MODE -eq 0 ]
 then
 	echo "[INFO] Extracting netlist from schematic $CELL_SCH"
-	XSCHEMTCL='set top_subckt 1; set netlist_dir .'
+	# In xschem commit e5227d6 the flag `top_subckt` has been renamed to `lvs_netlist`. We set both for
+	# forward and backward compatibility, but at some point, this can be removed (FIXME).
+	XSCHEMTCL='set top_subckt 1; set lvs_netlist 1; set netlist_dir .'
 	xschem --rcfile "$PDK_ROOT/$PDK/libs.tech/xschem/xschemrc" -n -s -q --no_x --tcl "$XSCHEMTCL" "$CELL_SCH" -N "$NETLIST_SCH" > /dev/null
 
 	if [ ! -f "$NETLIST_SCH" ]
@@ -178,7 +180,7 @@ fi
 } > "$EXT_SCRIPT"
 if [ $VERILOG_MODE -eq 1 ]
 then
-	# this is needed for the LVS in netgen, because the standard cells
+	# this is needed for the LVS in netgen because the standard cells
 	# are not instantiated in the (powered) .v file
 	echo "ext2spice subcircuit descend off"		>> "$EXT_SCRIPT"
 fi
