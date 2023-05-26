@@ -1,6 +1,8 @@
-# IIC-OSIC Tools
+# OSIC Multitool (a collection of scripts, documents, and tools for open-source IC design)
 
-## (c) 2021-2022 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits
+If you are looking for the **IIC-OSIC-TOOLS** (the Dockerized collection of open-source IC design tools from us) then please go to <https://github.com/iic-jku/iic-osic-tools>!
+
+## (c) 2021-2023 Harald Pretl, Johannes Kepler University Linz, Institute for Integrated Circuits
 
 This repo contains various tools and examples for **Open-Source IC (OSIC) Design**. At this point, only the open-source PDK [SKY130](https://github.com/google/skywater-pdk) from **SkyWater Technologies** and **Google** is supported.
 
