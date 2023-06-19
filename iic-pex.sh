@@ -20,8 +20,6 @@
 #
 # Usage: iic-pex.sh [-d] [-m mode] [-s mode] <cellname>
 #
-# The script expects the layout <cellname> in the current directory.
-#
 # Supported PEX modes:
 #   1 = C-decoupled
 #   2 = C-coupled (default)
