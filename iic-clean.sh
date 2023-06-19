@@ -17,17 +17,30 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 # SPDX-License-Identifier: Apache-2.0
+#
+# Usage: iic-clean.sh [dir]
+#
+#        If [dir] is given then this directory is cleaned, otherwise
+#        then the current directory is used.
 # ========================================================================
 
-echo "[INFO] Cleaning up files (hierarchically)."
+if [ $# -eq 0 ]; then
+    DIR=$PWD
+else
+    DIR=$1
+fi
 
-rm -rf ./*.spc
-rm -rf ./*.ext
-rm -rf ./*.log
-rm -rf ./*.out
-rm -rf ./*.raw
-rm -rf ./*.spice
-rm -rf ./*.vcd
-rm -rf ./ext_*.tcl
-rm -rf ./drc_*.tcl
-rm -rf ./pex_*.tcl
+echo "[INFO] Cleaning up files (hierarchically) in $DIR."
+
+find "$DIR" -name '*.spc' -exec rm {} \;
+find "$DIR" -name '*.ext' -exec rm {} \;
+find "$DIR" -name '*.log' -exec rm {} \;
+find "$DIR" -name '*.out' -exec rm {} \;
+find "$DIR" -name '*.raw' -exec rm {} \;
+find "$DIR" -name '*.spice' -exec rm {} \;
+find "$DIR" -name '*.vcd' -exec rm {} \;
+find "$DIR" -name '*.xml' -exec rm {} \;
+find "$DIR" -name 'ext*.tcl' -exec rm {} \;
+find "$DIR" -name 'drc*.tcl' -exec rm {} \;
+find "$DIR" -name 'pex*.tcl' -exec rm {} \;
+find "$DIR" -name '*.rpt' -exec rm {} \;
