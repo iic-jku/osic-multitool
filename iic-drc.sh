@@ -1,6 +1,6 @@
 #!/bin/sh
 # ========================================================================
-# SKY130 DRC (Design Rule Check)
+# DRC (Design Rule Check) Script for Open-Source IC Design
 #
 # SPDX-FileCopyrightText: 2021-2023 Harald Pretl
 # Johannes Kepler University, Institute for Integrated Circuits
@@ -18,7 +18,7 @@
 # limitations under the License.
 # SPDX-License-Identifier: Apache-2.0
 #
-# Usage: iic-drc [-d] [-m|-k|-b|-c] <cellname>
+# Usage: iic-drc.sh [-d] [-m|-k|-b] [-c] [-w workdir] <cellname>
 #
 # The script expects the layout <cellname> in the current folder using
 # either Magic-VLSI or Klayout.
@@ -31,15 +31,16 @@ ERR_CMD_NOT_FOUND=4
 ERR_UNKNOWN_FILE=5
 ERR_PDK_NOT_SUPPORTED=6
 
-if [ $# = 0 ]; then
+if [ $# -eq 0 ]; then
 	echo
 	echo "DRC script for Magic-VLSI and KLayout (IIC@JKU)"
 	echo
-	echo "Usage: $0 [-d] [-m|-k|-b|-c] <cellname>"
+	echo "Usage: $0 [-d] [-m|-k|-b] [-c] [-w workdir] <cellname>"
 	echo "       -m Run Magic DRC (default)"
 	echo "       -k Run KLayout DRC"
 	echo "       -b Run Magic and KLayout DRC"
 	echo "       -c Clean output files"
+	echo "       -w Use <workdir> to store result files (default current dir)"
 	echo "       -d Enable debug information"
 	echo
 	exit $ERR_NO_PARAM
@@ -53,14 +54,15 @@ RUN_KLAYOUT=0
 RUN_CLEAN=0
 DEBUG=0
 DRC_CLEAN=1
+RESDIR=$PWD
 
 # check if the PDK is already supported by this script
 # ----------------------------------------------------
 
 if echo "$PDK" | grep -q -i "sky130"; then
-	[ $DEBUG = 1 ] && echo "[INFO] sky130 PDK selected"
+	[ $DEBUG -eq 1 ] && echo "[INFO] sky130 PDK selected."
 elif echo "$PDK" | grep -q -i "gf180mcuC"; then
-	[ $DEBUG = 1 ] && echo "[INFO] gf180mcuC PDK selected"
+	[ $DEBUG -eq 1 ] && echo "[INFO] gf180mcuC PDK selected."
 else
 	echo "[ERROR] The PDK $PDK is not yet supported!"
 	exit $ERR_PDK_NOT_SUPPORTED
@@ -69,29 +71,33 @@ fi
 # check flags
 # -----------
 
-while getopts "mkbcd" flag; do
+while getopts "mkbcw:d" flag; do
 	case $flag in
 		m)
-			[ $DEBUG = 1 ] && echo "[INFO] flag -m is set"
+			[ $DEBUG -eq 1 ] && echo "[INFO] flag -m is set."
 			RUN_MAGIC=1
 			RUN_KLAYOUT=0
 			;;
 		k)
-			[ $DEBUG = 1 ] && echo "[INFO] flag -k is set"
+			[ $DEBUG -eq 1 ] && echo "[INFO] flag -k is set."
 			RUN_MAGIC=0
 			RUN_KLAYOUT=1
 			;;
 		b)	
-			[ $DEBUG = 1 ] && echo "[INFO] flag -b is set"
+			[ $DEBUG -eq 1 ] && echo "[INFO] flag -b is set."
 			RUN_MAGIC=1
 			RUN_KLAYOUT=1
 			;;
 		c)
-			[ $DEBUG = 1 ] && echo "[INFO] flag -c is set"
+			[ $DEBUG -eq 1 ] && echo "[INFO] flag -c is set."
 			RUN_CLEAN=1
 			;;
+		w)
+			[ $DEBUG -eq 1 ] && echo "[INFO] flag -w is set to <$OPTARG>."
+			RESDIR=$OPTARG
+			;;
 		d)
-			echo "[INFO] DEBUG is enabled"
+			echo "[INFO] DEBUG is enabled!"
 			DEBUG=1
 			;;
 		*)
@@ -100,15 +106,17 @@ while getopts "mkbcd" flag; do
 done
 shift $((OPTIND-1))
 
-if [ $RUN_CLEAN = 1 ]; then
-	rm -- -f *.magic.*.rpt
-	rm -- -f *.klayout.*.xml
+[ ! -d "$RESDIR" ] && mkdir -p "$RESDIR"
+if [ $RUN_CLEAN -eq 1 ]; then
+	rm -- -f "$RESDIR"/*.magic.*.rpt
+	rm -- -f "$RESDIR"/*.klayout.*.xml
 fi 
 
 # define useful variables
 # -----------------------
 
-EXT_SCRIPT="drc_$1.tcl"
+FBASENAME=$(basename "$1" | cut -d. -f1)
+EXT_SCRIPT="$RESDIR/drc_$FBASENAME.tcl"
 
 # check if the input file exists
 # ------------------------------
@@ -124,55 +132,69 @@ elif [ -f "$1.gds" ]; then
 elif [ -f "$1.gds.gz" ]; then
 	CELL_LAY="$1.gds.gz"
 else
-	echo "[ERROR] Layout $CELL_LAY not found!"
+	echo "[ERROR] Layout <$CELL_LAY> not found!"
     exit $ERR_FILE_NOT_FOUND
 fi
 
-[ $DEBUG = 1 ] && echo "[INFO] CELL_LAY=$CELL_LAY"
+[ $DEBUG -eq 1 ] && echo "[INFO] CELL_LAY=$CELL_LAY"
 
 # check if commands exist in the path
 # -----------------------------------
 
-if [ $RUN_MAGIC = 1 ]; then
+if [ $RUN_MAGIC -eq 1 ]; then
 	if [ ! -x "$(command -v magic)" ]; then
-    	echo "[ERROR] magic could not be found!"
+    	echo "[ERROR] Magic executable could not be found!"
     	exit $ERR_CMD_NOT_FOUND
 	fi
 fi
 
-if [ $RUN_KLAYOUT = 1 ]; then
+if [ $RUN_KLAYOUT -eq 1 ]; then
 	if [ ! -x "$(command -v klayout)" ]; then
-    	echo "[ERROR] KLayout could not be found!"
+    	echo "[ERROR] KLayout executable could not be found!"
     	exit $ERR_CMD_NOT_FOUND
 	fi
 fi
+
+echo "[INFO] Results are put into <$RESDIR>."
+CELL_NAME=$(basename "$CELL_LAY" | cut -d. -f1)
 
 # launch Magic DRC
 # ----------------
 
-if [ $RUN_MAGIC = 1 ]; then
+if [ $RUN_MAGIC -eq 1 ]; then
 	echo "[INFO] Launching Magic DRC..."
 
 	# remove old result files
-	rm -f "$CELL_LAY.magic.drc.rpt"
+	rm -f "$RESDIR/$CELL_NAME.magic.drc.rpt"
 
 	# generate DRC script for Magic
 	if echo "$CELL_LAY" | grep -q -i ".mag"; then
-		[ $DEBUG = 1 ] && echo "[INFO] magic runs DRC on .mag file"
-		echo "load $CELL_LAY" > "$EXT_SCRIPT"
+		[ $DEBUG -eq 1 ] && echo "[INFO] Magic runs DRC on .mag file."
+		{
+			echo "crashbackups stop"
+			echo "load $CELL_LAY"
+		} > "$EXT_SCRIPT"
 	elif echo "$CELL_LAY" | grep -q -i ".gds"; then
-		[ $DEBUG = 1 ] && echo "[INFO] magic runs DRC on .gds file"
-		echo "gds read $CELL_LAY" > "$EXT_SCRIPT"
+		[ $DEBUG -eq 1 ] && echo "[INFO] Magic runs DRC on .gds file."
+		{
+			echo "gds readonly true"
+			echo "gds flatten true"
+			echo "gds rescale false"
+			echo "tech unlock *"
+			echo "cif istyle sky130(vendor)"
+			echo "gds read $CELL_LAY"
+			echo "load $CELL_NAME -dereference"
+		} > "$EXT_SCRIPT"
 	else
-		echo "[ERROR] Unknown file format for magic DRC!"
+		echo "[ERROR] Unknown file format for Magic DRC!"
 		exit $ERR_UNKNOWN_FILE
 	fi
 	{
-		echo "set drc_rpt_path $CELL_LAY.magic.drc.rpt"
+		echo "set drc_rpt_path $RESDIR/$CELL_NAME.magic.drc.rpt"
 		# shellcheck disable=SC2016
 		echo 'set fout [open $drc_rpt_path w]'
 		echo 'set oscale [cif scale out]'
-		echo "set cell_name $CELL_LAY"
+		echo "set cell_name $CELL_NAME"
 
 		echo 'select top cell'
 		echo 'drc euclidean on'
@@ -221,7 +243,7 @@ if [ $RUN_MAGIC = 1 ]; then
 		echo 'close $fout'
 		# shellcheck disable=SC2016
 		#echo 'puts stdout "$count DRC errors found! (should be divided by 3 or 4)"'
-		echo 'exit 0'
+		echo 'quit -nocheck'
 	} >> "$EXT_SCRIPT"
 
 	# run it 
@@ -234,11 +256,11 @@ fi
 # launch KLayout DRC
 # ------------------
 
-if [ $RUN_KLAYOUT = 1 ]; then
+if [ $RUN_KLAYOUT -eq 1 ]; then
 	echo "[INFO] Launching KLayout DRC..."
 
 	# remove old result files
-	rm -f "$CELL_LAY".klayout.*.xml
+	rm -f "$RESDIR/$CELL_NAME".klayout.*.xml
 
 	if echo "$PDK" | grep -q -i "sky130"; then
 		klayout -b \
@@ -246,7 +268,7 @@ if [ $RUN_KLAYOUT = 1 ]; then
 			-rd feol=true \
 			-rd beol=false \
 			-rd offgrid=true \
-			-rd report="$CELL_LAY.klayout.drc.feol.xml" \
+			-rd report="$RESDIR/$CELL_NAME.klayout.drc.feol.xml" \
 			-r "$PDKPATH/libs.tech/klayout/drc/${PDK}_mr.drc" \
 			> /dev/null 2> /dev/null &
 
@@ -255,13 +277,13 @@ if [ $RUN_KLAYOUT = 1 ]; then
 			-rd feol=false \
 			-rd beol=true \
 			-rd offgrid=false \
-			-rd report="$CELL_LAY.klayout.drc.beol.xml" \
+			-rd report="$RESDIR/$CELL_NAME.klayout.drc.beol.xml" \
 			-r "$PDKPATH/libs.tech/klayout/drc/${PDK}_mr.drc" \
 			> /dev/null 2> /dev/null &
 
 		klayout -b \
 			-rd input="$CELL_LAY" \
-			-rd report="$CELL_LAY.klayout.drc.density.xml" \
+			-rd report="$RESDIR/$CELL_NAME.klayout.drc.density.xml" \
 			-r "$PDKPATH/libs.tech/klayout/drc/met_min_ca_density.lydrc" \
 			> /dev/null 2> /dev/null &
 
@@ -269,13 +291,13 @@ if [ $RUN_KLAYOUT = 1 ]; then
 			-rd input="$CELL_LAY" \
 			-rd threads="$(nproc --ignore 5)" \
 			-rd flat_mode=true \
-			-rd report="$CELL_LAY.klayout.drc.pincheck.xml" \
+			-rd report="$RESDIR/$CELL_NAME.klayout.drc.pincheck.xml" \
 			-r "$PDKPATH/libs.tech/klayout/drc/pin_label_purposes_overlapping_drawing.rb.drc" \
 			> /dev/null 2> /dev/null &
 
 		klayout -b \
 			-rd input="$CELL_LAY" \
-			-rd report="$CELL_LAY.klayout.drc.zeroarea.xml" \
+			-rd report="$RESDIR/$CELL_NAME.klayout.drc.zeroarea.xml" \
 			-r "$PDKPATH/libs.tech/klayout/drc/zeroarea.rb.drc" \
 			> /dev/null 2> /dev/null &
 	fi
@@ -295,52 +317,52 @@ echo "---"
 # evaluate results of runs
 # ------------------------
 
-if [ $RUN_MAGIC = 1 ]; then
-	[ $DEBUG = 0 ] && rm -f "$EXT_SCRIPT"
+if [ $RUN_MAGIC -eq 1 ]; then
+	[ $DEBUG -eq 0 ] && rm -f "$EXT_SCRIPT"
 
-	if grep -q "COUNT: 0" "$CELL_LAY.magic.drc.rpt"; then
+	if grep -q "COUNT: 0" "$RESDIR/$CELL_NAME.magic.drc.rpt"; then
 		echo "[INFO] Magic DRC is clean!"
 	else
-		echo "[INFO] Magic DRC errors found! Check <$CELL_LAY.magic.drc.rpt>!"
+		echo "[INFO] Magic DRC errors found! Check <$CELL_NAME.magic.drc.rpt>!"
 		DRC_CLEAN=0	
 	fi
 fi
 
-if [ $RUN_KLAYOUT = 1 ]; then
-	DRC_ERRORS=$(grep -c "edge-pair" "$CELL_LAY.klayout.drc.feol.xml")
-	if [ "$DRC_ERRORS" != 0 ]; then
-		echo "[INFO] KLayout $DRC_ERRORS DRC errors found! Check <$CELL_LAY.klayout.drc.feol.xml>!"
+if [ $RUN_KLAYOUT -eq 1 ]; then
+	DRC_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.feol.xml")
+	if [ "$DRC_ERRORS" -ne 0 ]; then
+		echo "[INFO] KLayout $DRC_ERRORS DRC errors found! Check <$CELL_NAME.klayout.drc.feol.xml>!"
 		DRC_CLEAN=0
 	else
 		echo "[INFO] KLayout FEOL DRC is clean!"
 	fi
 
-	DRC_ERRORS=$(grep -c "edge-pair" "$CELL_LAY.klayout.drc.beol.xml")
-	if [ "$DRC_ERRORS" != 0 ]; then
-		echo "[INFO] KLayout $DRC_ERRORS DRC errors found! Check <$CELL_LAY.klayout.drc.beol.xml>!"
+	DRC_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.beol.xml")
+	if [ "$DRC_ERRORS" -ne 0 ]; then
+		echo "[INFO] KLayout $DRC_ERRORS DRC errors found! Check <$CELL_NAME.klayout.drc.beol.xml>!"
 		DRC_CLEAN=0
 	else
 		echo "[INFO] KLayout BEOL DRC is clean!"
 	fi
 
-	DENSITY_ERRORS=$(grep -c "edge-pair" "$CELL_LAY.klayout.drc.density.xml")
-	if [ "$DENSITY_ERRORS" != 0 ]; then
-		echo "[INFO] Klayout $DENSITY_ERRORS density errors found! Check <$CELL_LAY.klayout.drc.density.xml>!"
+	DENSITY_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.density.xml")
+	if [ "$DENSITY_ERRORS" -ne 0 ]; then
+		echo "[INFO] Klayout $DENSITY_ERRORS density errors found! Check <$CELL_NAME.klayout.drc.density.xml>!"
 		DRC_CLEAN=0
 	else
 		echo "[INFO] KLayout metal density DRC is clean!"
 	fi
 
-	PINCHECK_ERRORS=$(grep -c "edge-pair" "$CELL_LAY.klayout.drc.pincheck.xml")
-	if [ "$PINCHECK_ERRORS" != 0 ]; then
-		echo "[INFO] KLayout $PINCHECK_ERRORS pin errors found! Check <$CELL_LAY.klayout.drc.pincheck.xml>!"
+	PINCHECK_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.pincheck.xml")
+	if [ "$PINCHECK_ERRORS" -ne 0 ]; then
+		echo "[INFO] KLayout $PINCHECK_ERRORS pin errors found! Check <$CELL_NAME.klayout.drc.pincheck.xml>!"
 		DRC_CLEAN=0
 	else
 		echo "[INFO] KLayout pin check DRC is clean!"
 	fi
 
-	ZEROAREA_ERRORS=$(grep -c "edge-pair" "$CELL_LAY.klayout.drc.zeroarea.xml")
-	if [ "$ZEROAREA_ERRORS" != 0 ]; then
+	ZEROAREA_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.zeroarea.xml")
+	if [ "$ZEROAREA_ERRORS" -ne 0 ]; then
 		echo "[INFO] KLayout $ZEROAREA_ERRORS zero-area errors found! Check <$CELL_LAY.klayout.drc.zeroarea.xml>!"
 		DRC_CLEAN=0
 	else
@@ -350,7 +372,7 @@ fi
 
 echo "---"
 
-if [ "$DRC_CLEAN" = 1 ]; then
+if [ "$DRC_CLEAN" -eq 1 ]; then
 		echo "CONGRATULATIONS! No DRC errors in <$CELL_LAY> found!"
 		echo "---"
 else
