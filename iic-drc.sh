@@ -19,9 +19,6 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 # Usage: iic-drc.sh [-d] [-m|-k|-b] [-c] [-w workdir] <cellname>
-#
-# The script expects the layout <cellname> in the current folder using
-# either Magic-VLSI or Klayout.
 # ========================================================================
 
 ERR_DRC=1
