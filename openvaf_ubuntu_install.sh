@@ -7,12 +7,15 @@
 
 apt-get -y update && apt-get -y upgrade
 apt-get install -y build-essential wget git python3 rustc cargo
-apt-get install -y clang clang-tools lld
-apt-get install -y libclang-common-14-dev libz-dev
+apt-get install -y clang-15 clang-tools-15 lld-15
+apt-get install -y libclang-common-15-dev libz-dev
 
-export LLVM_CONFIG=/usr/bin/llvm-config-14
-[ ! -f /usr/bin/clang-cl ] && ln -s /usr/bin/clang-cl-14 /usr/bin/clang-cl
-[ ! -f /usr/bin/llvm-lib ] && ln -s /usr/bin/llvm-lib-14 /usr/bin/llvm-lib
+export LLVM_CONFIG=/usr/bin/llvm-config-15
+[ ! -f /usr/bin/clang ] && ln -s /usr/bin/clang-15 /usr/bin/clang
+[ ! -f /usr/bin/clang-cl ] && ln -s /usr/bin/clang-cl-15 /usr/bin/clang-cl
+[ ! -f /usr/bin/llvm-lib ] && ln -s /usr/bin/llvm-lib-15 /usr/bin/llvm-lib
+[ ! -f /usr/bin/lld ] && ln -s /usr/bin/lld-15 /usr/bin/lld
+[ ! -f /usr/bin/ld.lld ] && ln -s /usr/bin/ld.lld-15 /usr/bin/ld.lld
 
 cd /tmp || exit
 git clone https://github.com/pascalkuthe/OpenVAF
