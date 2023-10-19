@@ -18,7 +18,7 @@
 # limitations under the License.
 # SPDX-License-Identifier: Apache-2.0
 #
-# Usage: iic-pdk.sh <pdk>
+# Usage: iic-pdk <pdk> [<stdcell-lib>]
 #
 # ========================================================================
 
@@ -62,10 +62,15 @@ else
 		ERROR=1
 	fi
 
+	if [ $# = 2 ]; then
+		export STD_CELL_LIBRARY="$2"
+	fi
+
 	if [ $ERROR = 0 ]; then
 		echo "PDK_ROOT=$PDK_ROOT"
 		echo "PDK=$PDK"
 		echo "PDKPATH=$PDKPATH"
+		[ $# = 2 ] && echo "STD_CELL_LIBRARY=$STD_CELL_LIBRARY"	
 		#echo
 		#echo "[DONE] Bye!"
 	fi
