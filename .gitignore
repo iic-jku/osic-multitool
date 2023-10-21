@@ -11,3 +11,4 @@ ext*.tcl
 *.fdb_latexmk
 *.synctex.gz
 iic-v2sch.awk
+.DS_Store
