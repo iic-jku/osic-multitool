@@ -309,6 +309,9 @@ if [ "$VERILOG_MODE" -eq 0 ]; then
 				# Add .end
 				echo ".end" >> "$NETLIST_SCH"
 		fi
+
+		# remove .save statements from xschem (if there are any)
+		sed -i '/.save/d' "$NETLIST_SCH"
 	else
 		echo "[INFO] Using SPICE netlist <$CELL_SCH>..."
 		cp "$CELL_SCH" "$NETLIST_SCH" 
