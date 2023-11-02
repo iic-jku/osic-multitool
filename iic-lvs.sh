@@ -330,26 +330,23 @@ fi
 if [ "$GDS_MODE" -eq 0 ]; then
 	# we read a .mag/.mag.gz view
 	{
-		echo "load $CELL_LAY"
-		echo "select top cell"
-		echo "expand"
+		echo "load ${CELL_LAY}"
 	} >> "$EXT_SCRIPT"
 else
 	# we read a .gds/.gds.gz view
 	{
-		echo "gds readonly true"
-		echo "gds flatten true"
-		echo "gds rescale false"
-		echo "tech unlock *"
-		echo "cif istyle sky130(vendor)"
 		echo "gds read $CELL_LAY"
-		echo "load $TOPCELL -dereference"
-		echo "select top cell"
+		echo "load $TOPCELL"
 	} >> "$EXT_SCRIPT"
 fi
 
 {
+	echo "select top cell"
 	echo "extract path $RESDIR"
+	echo "extract no capacitance"
+	echo "extract no coupling"
+	echo "extract no resistance"
+	echo "extract no length"
 	echo "extract all"
 	echo "ext2spice lvs"
 } >> "$EXT_SCRIPT"
@@ -362,7 +359,7 @@ fi
 
 {
 	echo "ext2spice -p $RESDIR -o $NETLIST_LAY"
-	echo "quit -nocheck"
+	echo "quit -noprompt"
 } >> "$EXT_SCRIPT"
 
 # extract SPICE netlist from layout with magic
@@ -406,7 +403,7 @@ fi
 echo "---"
 
 if grep -i -q "Circuits match uniquely." "$LVS_REPORT"; then
-	echo "CONGRATULATIONS! LVS is OK, schematic/Verilog and layout match!"
+	echo "CONGRATULATIONS! LVS is OK, schematic/netlist and layout match!"
 	echo "---"
 else
 	echo "LVS ERRORS FOUND! Please check <$LVS_REPORT>!" 
