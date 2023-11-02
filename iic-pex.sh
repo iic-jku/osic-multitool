@@ -133,6 +133,9 @@ elif [ -f "$1.mag.gz" ]; then
 elif [ -f "$1.gds" ]; then
 	CELL_LAY="$1.gds"
 	GDS_MODE=1
+elif [ -f "$1.gds.gz" ]; then
+	CELL_LAY="$1.gds.gz"
+	GDS_MODE=1
 else
 	echo "[ERROR] Layout $CELL_LAY not found!"
     exit $ERR_FILE_NOT_FOUND
@@ -143,9 +146,9 @@ fi
 # Define useful variables
 # -----------------------
 
-FILENAME=$(basename "$CELL_LAY" | cut -f 1 -d '.')
-EXT_SCRIPT="$RESDIR/pex_$FILENAME.tcl"
-NETLIST_PEX="$RESDIR/$FILENAME.pex.spice"
+CELL_NAME=$(basename "$CELL_LAY" | cut -f 1 -d '.')
+EXT_SCRIPT="$RESDIR/pex_$CELL_NAME.tcl"
+NETLIST_PEX="$RESDIR/$CELL_NAME.pex.spice"
 
 # check if GDS file
 # -----------------
@@ -165,13 +168,31 @@ fi
 # ---------------------------------
 
 {
-	[ "$GDS_MODE" -eq 1 ] && echo "gds read $CELL_LAY"
-	[ "$GDS_MODE" -eq 0 ] && echo "load $CELL_LAY"
-	echo "select top cell"
-	echo "flatten ${FILENAME}_flat"
-	echo "load ${FILENAME}_flat"
-	echo "select top cell"
+	echo "crashbackups stop"
+	echo "drc off"
 } > "$EXT_SCRIPT"
+
+if [ "$GDS_MODE" -eq 0 ]; then
+	# we read a .mag/.mag.gz view
+	{
+		echo "load ${CELL_LAY}"
+	} >> "$EXT_SCRIPT"
+else
+	# we read a .gds/.gds.gz view
+	{
+		echo "gds read ${CELL_LAY}"
+		echo "load ${CELL_NAME}"
+	} >> "$EXT_SCRIPT"
+fi
+
+{
+	echo "select top cell"
+	echo "flatten ${CELL_NAME}_flat"
+	echo "load ${CELL_NAME}_flat"
+	echo "cellname delete ${CELL_NAME}"
+	echo "cellname rename ${CELL_NAME}_flat ${CELL_NAME}"
+	echo "select top cell"
+} >> "$EXT_SCRIPT"
 
 if [ "$EXT_MODE" -eq 1 ] || [ "$EXT_MODE" -eq 2 ]; then
 	if [ "$EXT_MODE" -eq 1 ]; then
@@ -188,10 +209,6 @@ if [ "$EXT_MODE" -eq 1 ] || [ "$EXT_MODE" -eq 2 ]; then
 		[ "$EXT_MODE" -eq 1 ] && echo "extract no coupling"
 		echo "extract all"
 		echo "ext2spice cthresh 0.01"
-		[ "$SUBCIRCUIT" -eq 0 ] && echo "ext2spice subcircuit top off"
-		echo "ext2spice format ngspice"
-		echo "ext2spice -p $RESDIR -o $NETLIST_PEX.tmp"
-		echo "quit"
 	} >> "$EXT_SCRIPT"
 fi
 
@@ -209,13 +226,18 @@ if [ "$EXT_MODE" -eq 3 ]; then
 		echo "ext2spice cthresh 0.01"	
 		echo "ext2spice rthresh 100"	
 		echo "ext2spice extresist on"
-		echo "ext2spice resistor tee on"
-		[ "$SUBCIRCUIT" -eq 0 ] && echo "ext2spice subcircuit top off"
-		echo "ext2spice format ngspice"
-		echo "ext2spice -p $RESDIR -o $NETLIST_PEX.tmp"
-        echo "quit"
+		# FIXME acc. Tim Edwards the "tee on" option might produce wrong netlists by placing resistors twice.
+		# Need to experiment with it!
+		# echo "ext2spice resistor tee on"
 	} >> "$EXT_SCRIPT"
 fi
+
+{
+	[ "$SUBCIRCUIT" -eq 0 ] && echo "ext2spice subcircuit top off"
+	echo "ext2spice format ngspice"	
+	echo "ext2spice -p $RESDIR -o $NETLIST_PEX.tmp"
+	echo "quit -noprompt"
+} >> "$EXT_SCRIPT"
 
 # check if commands exist in the path
 # -----------------------------------
