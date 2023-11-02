@@ -174,13 +174,9 @@ if [ $RUN_MAGIC -eq 1 ]; then
 	elif echo "$CELL_LAY" | grep -q -i ".gds"; then
 		[ $DEBUG -eq 1 ] && echo "[INFO] Magic runs DRC on .gds file."
 		{
-			echo "gds readonly true"
-			echo "gds flatten true"
-			echo "gds rescale false"
-			echo "tech unlock *"
-			echo "cif istyle sky130(vendor)"
+			echo "crashbackups stop"	
 			echo "gds read $CELL_LAY"
-			echo "load $CELL_NAME -dereference"
+			echo "load $CELL_NAME"
 		} > "$EXT_SCRIPT"
 	else
 		echo "[ERROR] Unknown file format for Magic DRC!"
@@ -240,7 +236,7 @@ if [ $RUN_MAGIC -eq 1 ]; then
 		echo 'close $fout'
 		# shellcheck disable=SC2016
 		#echo 'puts stdout "$count DRC errors found! (should be divided by 3 or 4)"'
-		echo 'quit -nocheck'
+		echo 'quit -noprompt'
 	} >> "$EXT_SCRIPT"
 
 	# run it 
