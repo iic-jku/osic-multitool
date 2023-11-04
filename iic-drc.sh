@@ -165,13 +165,13 @@ if [ $RUN_MAGIC -eq 1 ]; then
 	rm -f "$RESDIR/$CELL_NAME.magic.drc.rpt"
 
 	# generate DRC script for Magic
-	if echo "$CELL_LAY" | grep -q -i ".mag"; then
+	if echo "$CELL_LAY" | grep -q -i "\.mag"; then
 		[ $DEBUG -eq 1 ] && echo "[INFO] Magic runs DRC on .mag file."
 		{
 			echo "crashbackups stop"
 			echo "load $CELL_LAY"
 		} > "$EXT_SCRIPT"
-	elif echo "$CELL_LAY" | grep -q -i ".gds"; then
+	elif echo "$CELL_LAY" | grep -q -i "\.gds"; then
 		[ $DEBUG -eq 1 ] && echo "[INFO] Magic runs DRC on .gds file."
 		{
 			echo "crashbackups stop"	

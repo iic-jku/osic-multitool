@@ -101,16 +101,16 @@ while getopts "s:l:w:c:d" flag; do
 		s)
 			[ $DEBUG -eq 1 ] && echo "[INFO] flag -s is set to <$OPTARG>."
 			CELL_SCH=$(realpath "$OPTARG")
-			if echo "$CELL_SCH" | grep -q -i ".sch"; then
+			if echo "$CELL_SCH" | grep -q -i "\.sch"; then
 				VERILOG_MODE=0
 				SPICE_MODE=0
-			elif echo "$CELL_SCH" | grep -q -i ".spice"; then
+			elif echo "$CELL_SCH" | grep -q -i "\.spice"; then
 				VERILOG_MODE=0
 				SPICE_MODE=1
-			elif echo "$CELL_SCH" | grep -q -i ".spc"; then
+			elif echo "$CELL_SCH" | grep -q -i "\.spc"; then
 				VERILOG_MODE=0
 				SPICE_MODE=1
-			elif echo "$CELL_SCH" | grep -q -i ".v"; then
+			elif echo "$CELL_SCH" | grep -q -i "\.v"; then
 				VERILOG_MODE=1
 				SPICE_MODE=0
 			else
@@ -122,9 +122,9 @@ while getopts "s:l:w:c:d" flag; do
 		l)
 			[ $DEBUG -eq 1 ] && echo "[INFO] flag -l is set to <$OPTARG>."
 			CELL_LAY=$(realpath "$OPTARG")
-			if echo "$CELL_LAY" | grep -q -i ".gds"; then
+			if echo "$CELL_LAY" | grep -q -i "\.gds"; then
 				GDS_MODE=1
-			elif echo "$CELL_LAY" | grep -q -i ".mag"; then
+			elif echo "$CELL_LAY" | grep -q -i "\.mag"; then
 				GDS_MODE=0
 			else
 				echo "[ERROR] Unknown file format of <$CELL_LAY>!"
@@ -402,7 +402,7 @@ fi
 
 echo "---"
 
-if grep -i -q "Circuits match uniquely." "$LVS_REPORT"; then
+if grep -i -q "Circuits match uniquely" "$LVS_REPORT"; then
 	echo "CONGRATULATIONS! LVS is OK, schematic/netlist and layout match!"
 	echo "---"
 else
