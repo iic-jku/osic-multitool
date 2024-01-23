@@ -2,7 +2,7 @@
 # ========================================================================
 # DRC (Design Rule Check) Script for Open-Source IC Design
 #
-# SPDX-FileCopyrightText: 2021-2023 Harald Pretl
+# SPDX-FileCopyrightText: 2021-2024 Harald Pretl
 # Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -27,6 +27,7 @@ ERR_NO_PARAM=3
 ERR_CMD_NOT_FOUND=4
 ERR_UNKNOWN_FILE=5
 ERR_PDK_NOT_SUPPORTED=6
+ERR_NO_OUTPUT=7
 
 if [ $# -eq 0 ]; then
 	echo
@@ -91,7 +92,7 @@ while getopts "mkbcw:d" flag; do
 			;;
 		w)
 			[ $DEBUG -eq 1 ] && echo "[INFO] flag -w is set to <$OPTARG>."
-			RESDIR=$OPTARG
+			RESDIR=$(realpath "$OPTARG")
 			;;
 		d)
 			echo "[INFO] DEBUG is enabled!"
@@ -255,6 +256,8 @@ if [ $RUN_KLAYOUT -eq 1 ]; then
 	# remove old result files
 	rm -f "$RESDIR/$CELL_NAME".klayout.*.xml
 
+	[ $DEBUG -eq 1 ] && echo "[INFO] CELL_LAY=$CELL_LAY RESDIR=$RESDIR PDKPATH=$PDKPATH PDK=$PDK"
+
 	if echo "$PDK" | grep -q -i "sky130"; then
 		klayout -b \
 			-rd input="$CELL_LAY" \
@@ -313,6 +316,11 @@ echo "---"
 if [ $RUN_MAGIC -eq 1 ]; then
 	[ $DEBUG -eq 0 ] && rm -f "$EXT_SCRIPT"
 
+	if [ ! -f "$RESDIR/$CELL_NAME.magic.drc.rpt" ]; then
+		echo "[ERROR] No magic output found!"
+		exit $ERR_NO_OUTPUT
+	fi
+
 	if grep -q "COUNT: 0" "$RESDIR/$CELL_NAME.magic.drc.rpt"; then
 		echo "[INFO] Magic DRC is clean!"
 	else
@@ -322,6 +330,11 @@ if [ $RUN_MAGIC -eq 1 ]; then
 fi
 
 if [ $RUN_KLAYOUT -eq 1 ]; then
+
+	if [ ! -f "$RESDIR/$CELL_NAME.klayout.drc.feol.xml" ]; then
+		echo "[ERROR] No klayout output found!"
+		exit $ERR_NO_OUTPUT
+	fi
 	DRC_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.feol.xml")
 	if [ "$DRC_ERRORS" -ne 0 ]; then
 		echo "[INFO] KLayout $DRC_ERRORS DRC errors found! Check <$CELL_NAME.klayout.drc.feol.xml>!"
@@ -330,6 +343,10 @@ if [ $RUN_KLAYOUT -eq 1 ]; then
 		echo "[INFO] KLayout FEOL DRC is clean!"
 	fi
 
+	if [ ! -f "$RESDIR/$CELL_NAME.klayout.drc.beol.xml" ]; then
+		echo "[ERROR] No klayout output found!"
+		exit $ERR_NO_OUTPUT
+	fi
 	DRC_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.beol.xml")
 	if [ "$DRC_ERRORS" -ne 0 ]; then
 		echo "[INFO] KLayout $DRC_ERRORS DRC errors found! Check <$CELL_NAME.klayout.drc.beol.xml>!"
@@ -338,6 +355,10 @@ if [ $RUN_KLAYOUT -eq 1 ]; then
 		echo "[INFO] KLayout BEOL DRC is clean!"
 	fi
 
+	if [ ! -f "$RESDIR/$CELL_NAME.klayout.drc.density.xml" ]; then
+		echo "[ERROR] No klayout output found!"
+		exit $ERR_NO_OUTPUT
+	fi
 	DENSITY_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.density.xml")
 	if [ "$DENSITY_ERRORS" -ne 0 ]; then
 		echo "[INFO] Klayout $DENSITY_ERRORS density errors found! Check <$CELL_NAME.klayout.drc.density.xml>!"
@@ -346,6 +367,10 @@ if [ $RUN_KLAYOUT -eq 1 ]; then
 		echo "[INFO] KLayout metal density DRC is clean!"
 	fi
 
+	if [ ! -f "$RESDIR/$CELL_NAME.klayout.drc.pincheck.xml" ]; then
+		echo "[ERROR] No klayout output found!"
+		exit $ERR_NO_OUTPUT
+	fi
 	PINCHECK_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.pincheck.xml")
 	if [ "$PINCHECK_ERRORS" -ne 0 ]; then
 		echo "[INFO] KLayout $PINCHECK_ERRORS pin errors found! Check <$CELL_NAME.klayout.drc.pincheck.xml>!"
@@ -354,6 +379,10 @@ if [ $RUN_KLAYOUT -eq 1 ]; then
 		echo "[INFO] KLayout pin check DRC is clean!"
 	fi
 
+	if [ ! -f "$RESDIR/$CELL_NAME.klayout.drc.zeroarea.xml" ]; then
+		echo "[ERROR] No klayout output found!"
+		exit $ERR_NO_OUTPUT
+	fi
 	ZEROAREA_ERRORS=$(grep -c "edge-pair" "$RESDIR/$CELL_NAME.klayout.drc.zeroarea.xml")
 	if [ "$ZEROAREA_ERRORS" -ne 0 ]; then
 		echo "[INFO] KLayout $ZEROAREA_ERRORS zero-area errors found! Check <$CELL_LAY.klayout.drc.zeroarea.xml>!"
