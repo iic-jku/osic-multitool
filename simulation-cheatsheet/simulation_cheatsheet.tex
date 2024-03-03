@@ -45,5 +45,68 @@
 	\url{https://ngspice.sourceforge.io/docs/ngspice-42-manual.pdf}\newline \url{https://xyce.sandia.gov/files/xyce/Xyce_Users_Guide_7.8.pdf}\newline \url{http://repo.hu/projects/xschem/xschem_man/xschem_man.html}
 	
 	\newpage
+	
+		\section*{Introductionary notes on Ngspice}
+	Simulation based on the typical SPICE commands, which are preceded by a dot, is known in Ngspice as batch mode. In addition to this basic mode of operation, Ngspice does also offer a so called interactive mode with control file or control section, which allows to either process the results from batch mode, or use all the known simulation commands, measurement statements for scripting. Note that commands in the interactive mode are not preceded by a dot!
+	Lastly, it should be noted, that Ngspice creates a so called \emph{plot} for every simulation run, e.\,g. \emph{op1, ac1, tran2}. These contain all the respective vectors. In case of a small-signal noise analysis, two plots are generated, the second \emph{plot} contains the integrated results. The inital plot is called \emph{const}. Vectors may be accessed across plots by adding <plotname>. infront of the vector.
+	
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{Simulation options:}\\
+		\midrule
+		
+		\bottomrule
+	\end{tabular}
+	
+	\newpage
+	
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{Simulation commands:}\\
+		\midrule
+		
+		\bottomrule
+	\end{tabular}
+	
+	\newpage
+	
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{Measurement snippets (ngspice):}\\
+		\midrule
+		
+		\bottomrule
+	\end{tabular}
+	
+	\newpage
+	
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{General commands (ngspice):}\\
+		\midrule
+		\mac{display} & print all vectors of the current plot\\
+		\mac{set}	& print all plots and set variables\\
+		\mac{show} & print all dc operating point model parameters for all device instances\\
+		\mac{show} [\argu{<devicename>}] & print dc operating point model parameters of <devicename>\\
+		\bottomrule
+	\end{tabular}
+	
+	\newpage
+	
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{Bind keys (Xschem):}\\
+		\midrule
+		\bottomrule
+	\end{tabular}
+	
+	\newpage
+	
+	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+		\toprule
+		\multicolumn{2}{l}{Mouse operations (Xschem):}\\
+		\midrule
+		\bottomrule
+	\end{tabular}
 
 \end{document}
