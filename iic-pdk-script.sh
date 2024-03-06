@@ -37,7 +37,7 @@ if [ $# = 0 ]; then
 	if [ -d "$PDK_ROOT" ]; then
 		echo "Available PDKs:"
 		# shellcheck disable=SC2010
-		ls "$PDK_ROOT" | grep -v "volare"
+		ls "$PDK_ROOT" | grep -v volare
 		echo
 	fi
 
@@ -57,7 +57,6 @@ else
 	if [ -d "$PDK_ROOT/$1" ]; then
 		export PDK="$1"
 		export PDKPATH="$PDK_ROOT/$PDK"
-		export KLAYOUT_HOME="$PDKPATH/libs.tech/klayout"
 	else
 		echo "[ERROR] PDK directory $PDK_ROOT/$1 not found!"
 		ERROR=1
