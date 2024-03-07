@@ -2,7 +2,7 @@
 # ========================================================================
 # PEX (Parasitic Extraction) using Magic VLSI
 #
-# SPDX-FileCopyrightText: 2021-2023 Harald Pretl
+# SPDX-FileCopyrightText: 2021-2024 Harald Pretl
 # Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
 # limitations under the License.
 # SPDX-License-Identifier: Apache-2.0
 #
-# Usage: iic-pex.sh [-d] [-m mode] [-s mode] <cellname>
+# Usage: iic-pex.sh [-d] [-m mode] [-s mode] [-n <subcktname>] [-w <workdir>] <cellname>
 #
 # Supported PEX modes:
 #   1 = C-decoupled
@@ -37,10 +37,11 @@ if [ $# -eq 0 ]; then
 	echo
 	echo "PEX script using Magic-VLSI (IIC@JKU)"
 	echo
-	echo "Usage: $0 [-d] [-m mode] [-s mode] [-w <workdir>] <cellname>"
+	echo "Usage: $0 [-d] [-m mode] [-s mode] [-n <subcktname>] [-w <workdir>] <cellname>"
 	echo
 	echo "       -m Select PEX mode (1 = C-decoupled, 2 = C-coupled [default], 3 = full-RC)"
 	echo "       -s Subcircuit definition in PEX netlist (1 = include subcircuit definition [default], 0 = no subcircuit)"
+	echo "       -n name of PEX subcircuit (default is <cellname>)"
 	echo "       -w Set <workdir> working directory"
 	echo "       -d Enable debug information"
 	echo
@@ -55,11 +56,12 @@ GDS_MODE=0
 EXT_MODE=2
 SUBCIRCUIT=1
 RESDIR=$PWD
+CELL_NAME_SET=0
 
 # Check flags
 # -----------
 
-while getopts "m:s:w:d" flag; do
+while getopts "m:s:w:n:d" flag; do
 	case $flag in
 		m)
 			[ $DEBUG -eq 1 ] && echo "[INFO] Flag -m is set to <$OPTARG>."
@@ -73,6 +75,11 @@ while getopts "m:s:w:d" flag; do
 			[ $DEBUG -eq 1 ] && echo "[INFO] Flag -w is set to <$OPTARG>."
 			RESDIR=$(realpath "$OPTARG")
 			;;
+		n)
+			[ $DEBUG -eq 1 ] && echo "[INFO] Flag -n is set to <$OPTARG>."
+			CELL_NAME_SET=1
+			CELL_NAME_PEX=${OPTARG}
+			;;	
 		d)
 			echo "[INFO] DEBUG is enabled."
 			DEBUG=1
@@ -83,8 +90,8 @@ while getopts "m:s:w:d" flag; do
 done
 shift $((OPTIND-1))
 
-# Check that mode is an integer and in a valid range
-# --------------------------------------------------
+# Check that the mode is an integer and in a valid range
+# ------------------------------------------------------
 
 if [ -n "$EXT_MODE" ] && [ "$EXT_MODE" -eq "$EXT_MODE" ] 2>/dev/null; then
 	if [ "$EXT_MODE" -lt 1 ] || [ "$EXT_MODE" -gt 3 ]; then
@@ -149,6 +156,9 @@ fi
 CELL_NAME=$(basename "$CELL_LAY" | cut -f 1 -d '.')
 EXT_SCRIPT="$RESDIR/pex_$CELL_NAME.tcl"
 NETLIST_PEX="$RESDIR/$CELL_NAME.pex.spice"
+if [ $CELL_NAME_SET -eq 0 ]; then
+	CELL_NAME_PEX=${CELL_NAME}
+fi
 
 # check if GDS file
 # -----------------
@@ -190,7 +200,7 @@ fi
 	echo "flatten ${CELL_NAME}_flat"
 	echo "load ${CELL_NAME}_flat"
 	echo "cellname delete ${CELL_NAME}"
-	echo "cellname rename ${CELL_NAME}_flat ${CELL_NAME}"
+	echo "cellname rename ${CELL_NAME}_flat ${CELL_NAME_PEX}"
 	echo "select top cell"
 } >> "$EXT_SCRIPT"
 
