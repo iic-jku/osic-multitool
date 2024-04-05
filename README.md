@@ -94,6 +94,22 @@ A combination of `yosys` and `netlistsvg` (both tools are available in `IIC-OSIC
 ./iic-v2svg.sh input.v output.svg
 ```
 
+## Conversion of GDS to OASIS (or other way round)
+
+A script is available to use `KLayout` for easy conversion between GDS (this file format is widespread) and OASIS (which results in much smaller filesize).
+
+GDS to OASIS conversion:
+
+```shell
+./iic-layconv.sh input.gds output.oas
+```
+
+OASIS to GDS conversion, with optional zipping of output file:
+
+```shell
+./iic-layconv.sh -z input.oas output.gds
+```
+
 ## Cheatsheet for Magic
 
 In the folder `magic-cheatsheet` you can find a summary of important macros, keybindings, and mouse button operations for `Magic`, relating to version 8.3.
