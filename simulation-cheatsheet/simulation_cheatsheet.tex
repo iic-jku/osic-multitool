@@ -50,21 +50,43 @@
 	Simulation based on the typical SPICE commands, which are preceded by a dot, is known in Ngspice as batch mode. In addition to this basic mode of operation, Ngspice does also offer a so called interactive mode with control file or control section, which allows to either process the results from batch mode, or use all the known simulation commands, measurement statements for scripting. Note that commands in the interactive mode are not preceded by a dot!
 	Lastly, it should be noted, that Ngspice creates a so called \emph{plot} for every simulation run, e.\,g. \emph{op1, ac1, tran2}. These contain all the respective vectors. In case of a small-signal noise analysis, two plots are generated, the second \emph{plot} contains the integrated results. The inital plot is called \emph{const}. Vectors may be accessed across plots by adding <plotname>. infront of the vector.
 	
-	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+	\begin{tabular}{lll}%{p{0.3\textwidth}p{0.7\textwidth}}
 		\toprule
-		\multicolumn{2}{l}{Simulation options:}\\
+		\multicolumn{3}{l}{Simulation options:}\\
+		Ngspice & Xyce & Comment\\
 		\midrule
-		
+		.temp &&\\
+		.IC &&set initial conditions\\
+		.LIB &&include a library\\
+		.INCLUDE&& include part of the netlist\\
+		.OPTIONS&&\\
+		.NODESET&&set initial conditions\\
+		.PARAM&&define parameter\\
+		.CSPARAM&--& define parameter(s), also available in control section\\
+		.SAVE&&save simulation result vector\\
+		.PROBE&&save device currents, voltages and differntial voltages\\
 		\bottomrule
 	\end{tabular}
 	
 	\newpage
 	
-	\begin{tabular}{p{0.3\textwidth}p{0.7\textwidth}}
+	\begin{tabular}{lll}%{p{0.3\textwidth}p{0.7\textwidth}}
 		\toprule
-		\multicolumn{2}{l}{Simulation commands:}\\
+		\multicolumn{3}{l}{Analysis commands:}\\
+		Ngspice & Xyce & Comment\\
 		\midrule
-		
+		.OP&&operating point\\
+		.DC&&\\
+		.AC&&small-signal ac\\
+		.NOISE&&small-signal noise\\
+		.TF&&transfer function\\
+		.PZ node1 node2 node3 node4 cur/vol pol/zer/pz &&Pole-zero\\
+		.SP&&S parameter\\
+		.TRAN&&transient\\
+		.DISTO&&distortion\\
+		.FOUR&&\\
+		.PSS&&Periodic steady state \\
+		.SENS&&sensitivity\\
 		\bottomrule
 	\end{tabular}
 	
