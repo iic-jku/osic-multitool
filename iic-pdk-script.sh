@@ -2,7 +2,7 @@
 # ========================================================================
 # Switch PDKs (for IIC-OSIC-TOOLS)
 #
-# SPDX-FileCopyrightText: 2023 Harald Pretl
+# SPDX-FileCopyrightText: 2023-2024 Harald Pretl
 # Johannes Kepler University, Institute for Integrated Circuits
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -57,6 +57,7 @@ else
 	if [ -d "$PDK_ROOT/$1" ]; then
 		export PDK="$1"
 		export PDKPATH="$PDK_ROOT/$PDK"
+		export SPICE_USERINIT_DIR="$PDK_ROOT/$PDK/libs.tech/ngspice"
 	else
 		echo "[ERROR] PDK directory $PDK_ROOT/$1 not found!"
 		ERROR=1
