@@ -203,6 +203,7 @@ fi
 	echo "cellname rename ${CELL_NAME}_flat ${CELL_NAME_PEX}"
 	echo "select top cell"
 	echo "extract path $RESDIR"
+	echo "ext2spice lvs"
 } >> "$EXT_SCRIPT"
 
 if [ "$EXT_MODE" -eq 1 ] || [ "$EXT_MODE" -eq 2 ]; then
@@ -218,7 +219,6 @@ if [ "$EXT_MODE" -eq 1 ] || [ "$EXT_MODE" -eq 2 ]; then
 	{
 		[ "$EXT_MODE" -eq 1 ] && echo "extract no coupling"
 		echo "extract all"
-		echo "ext2spice cthresh 0.01"
 	} >> "$EXT_SCRIPT"
 fi
 
@@ -232,8 +232,6 @@ if [ "$EXT_MODE" -eq 3 ]; then
 		echo "ext2sim"
 		echo "extresist tolerance 10"
 		echo "extresist all"
-		echo "ext2spice cthresh 0.01"	
-		echo "ext2spice rthresh 100"	
 		echo "ext2spice extresist on"
 		# FIXME acc. Tim Edwards the "tee on" option might produce wrong netlists by placing resistors twice.
 		# Need to experiment with it!
@@ -242,13 +240,8 @@ if [ "$EXT_MODE" -eq 3 ]; then
 fi
 
 {
+	echo "ext2spice cthresh 0.01"	
 	[ "$SUBCIRCUIT" -eq 0 ] && echo "ext2spice subcircuit top off"
-	[ "$SUBCIRCUIT" -eq 1 ] && echo "ext2spice subcircuit top on"
-	echo "ext2spice global off"
-	echo "ext2spice renumber off"
-	echo "ext2spice scale off"
-	echo "ext2spice blackbox on"
-	echo "ext2spice format ngspice"	
 	echo "ext2spice -p $RESDIR -o $NETLIST_PEX.tmp"
 	echo "quit -noprompt"
 } >> "$EXT_SCRIPT"
